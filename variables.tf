@@ -39,6 +39,11 @@ variable "domain_name" {
 # Nullplatform Variables
 ################################################################################
 
+variable "api_key" {
+    type        = string
+    description = "nullplatform API key"
+}
+
 variable "organization" {
   type        = string
   description = "nullplatform organization slug"

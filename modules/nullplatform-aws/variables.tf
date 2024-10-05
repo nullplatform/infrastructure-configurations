@@ -6,22 +6,18 @@ variable "region" {
   type = string
 }
 
+variable "account" {
+  type = string
+  description = "The null platform account slug"
+}
+
+variable "api_key" {
+  type        = string
+  description = "nullplatform API key"
+}
+
 ################################################################################
 # Variables from other Modules
-################################################################################
-
-variable "vpc_id" {
-  description = "VPC ID which EKS cluster is deployed in"
-  type        = string
-}
-
-variable "private_subnets" {
-  description = "VPC Private Subnets which EKS cluster is deployed in"
-  type        = list(any)
-}
-
-################################################################################
-# Variables defined using Environment Variables
 ################################################################################
 
 variable "cluster_name" {
@@ -29,12 +25,28 @@ variable "cluster_name" {
   description = "The name of the EKS cluster"
 }
 
+variable "application_manager_role" {
+  type        = string
+  description = "The ARN of the null-application-role"
+}
+
 variable "scope_manager_role" {
-  type    = string
+  type        = string
   description = "Add admin role to the aws-auth configmap"
 }
 
 variable "telemetry_manager_role" {
-  type    = string
+  type        = string
   description = "Add admin role to the aws-auth configmap"
 }
+
+variable "build_workflow_user_access_key_id" {
+  type        = string
+  description = "The access key ID for the null-build-workflow-user"
+}
+
+variable "build_workflow_user_secret_access_key" {
+  type        = string
+  description = "The secret access key for the null-build-workflow-user"
+}
+

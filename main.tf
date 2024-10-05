@@ -50,6 +50,7 @@ module "eks" {
   source = "./modules/eks-cluster"
 
   region                 = var.region
+  cluster_name           = var.cluster_name
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
   scope_manager_role     = module.iam_roles_policies.null_scope_workflow_role_arn
@@ -78,4 +79,22 @@ module "aws_alb_controller" {
   cluster_name      = var.cluster_name
   vpc_id            = module.vpc.vpc_id
   oidc_provider_arn = module.eks.oidc_provider_arn
+}
+
+################################################################################
+# Nullplatform AWS Provider Configuration
+################################################################################
+
+module "nullplatform_configuration" {
+  source = "./modules/nullplatform-aws"
+
+  api_key                               = var.api_key
+  account                               = var.account
+  region                                = var.region
+  cluster_name                          = var.cluster_name
+  application_manager_role              = module.iam_roles_policies.null_application_role_arn
+  scope_manager_role                    = module.iam_roles_policies.null_scope_workflow_role_arn
+  telemetry_manager_role                = module.iam_roles_policies.null_telemetry_manager_role_arn
+  build_workflow_user_access_key_id     = module.iam_roles_policies.null_build_workflow_user_access_key_id
+  build_workflow_user_secret_access_key = module.iam_roles_policies.null_build_workflow_user_secret_access_key
 }
