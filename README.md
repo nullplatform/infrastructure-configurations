@@ -4,15 +4,23 @@
     </a>
     <br>
     <br>
-    Nullplatform "Any Technology" Template
+    Nullplatform IAC Configuration Blueprints
     <br>
 </h2>
 
-This is a minimalistic sample on how you can create an application on arbitrary technology.
-In particular, we're spinning up an image that contains an echo server.
-You can check *Echo Server* documentation [here](https://ealenn.github.io/Echo-Server/).
+# Index Content
 
-## How do I modify this template to build my own application?
+```
+.
+├── private
+└── public
+    ├── aws
+    └── azure
+```
+ ## Private 
 
-1. Change the Dockerfile to run the application / binary that you are building
-2. Deploy your application in nullplatform
+ Code to be managed by Nullplatform team, internal binding operations intended to operate, follow the readme for further details
+
+ ## Public
+
+ Code to be managed by anyone interested on making tests on Nullplatform with their own infrastructure, please note is likely to need both public and private parts to be executed in order to have a fully functional poc, follow the [readme](./public/README.md) for further details [GitHub Pages](https://pages.github.com/).
