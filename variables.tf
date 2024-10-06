@@ -1,47 +1,23 @@
+variable "cloud_provider" {
+  type = string
+  description = "The cloud provider to use (aws, azure, or gcp)"
+  default = "aws"
+}
 
-################################################################################
-# Default Variables
-################################################################################
+variable "domain_name" {
+  type = string
+  description = "The domain name to use for nullplatform applications"
+  default = "nullapps.io"
+}
 
 variable "region" {
   type    = string
-  default = "us-east-2"
+  default = "us-east-1"
 }
-
-
-################################################################################
-# EKS Cluster Variables
-################################################################################
-
-variable "cluster_name" {
-  type    = string
-  default = "tf-cluster"
-}
-
-################################################################################
-# ALB Controller Variables
-################################################################################
-
-variable "env_name" {
-  type    = string
-  default = "dev"
-}
-
-################################################################################
-# Route53 Variables
-################################################################################
-
-variable "domain_name" {
-  type    = string
-}
-
-################################################################################
-# Nullplatform Variables
-################################################################################
 
 variable "api_key" {
-    type        = string
-    description = "nullplatform API key"
+  type        = string
+  description = "nullplatform API key"
 }
 
 variable "organization" {
