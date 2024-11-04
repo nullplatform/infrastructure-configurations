@@ -5,8 +5,8 @@ data "aws_region" "current" {
 resource "helm_release" "eks_config_helm" {
   name       = "nullplatform-k8s-helmchart"
   provider   = helm
-  repository = "https://nullplatform.github.io/helm-charts/charts"
-  chart      = "null-chart"
+  repository = "https://nullplatform.github.io/helm-charts"
+  chart      = "nullplatform-chart"
   set {
     name  = "global.provider"
     value = "eks"
