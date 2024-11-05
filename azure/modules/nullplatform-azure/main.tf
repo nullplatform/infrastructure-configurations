@@ -1,14 +1,13 @@
 resource "nullplatform_provider_config" "azure" {
-  provider      = nullplatform
   account       = var.account
   type          = "azure-configuration"
   dimensions    = {}
   attributes    = jsonencode({
     "authentication": {
-      "client_id": "6307dea1-d717-4ffc-9aa7-ce2f665d34f6",
-      "tenant_id": "ebf65bf9-2e0c-49f0-88a9-8cb51e713016",
-      "client_secret": "s2o8Q~_jW8rUSTdwtuA3khep-y-v_Cs20dtoudys",
-      "subscription_id": "4f01781f-c243-43cd-bf9a-5532f6379f9d"
+      "client_id": azuread_application_registration.provider_account.client_id
+      "tenant_id": data.azurerm_client_config.current.tenant_id
+      "client_secret": azuread_application_password.provider_credential.value,
+      "subscription_id": data.azurerm_client_config.current.subscription_id
     },
     "networking": {
       "domain_name": "${var.account}.nullapps.io",
@@ -20,7 +19,6 @@ resource "nullplatform_provider_config" "azure" {
 }
 
 resource "nullplatform_provider_config" "aks" {
-  provider     = nullplatform
   account      = var.account
   type         = "aks-configuration"
   dimensions   = {}
