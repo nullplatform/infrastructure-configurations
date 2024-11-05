@@ -1,5 +1,5 @@
 provider "azurerm" {
-  subscription_id = "c1678f88-e6e7-4ae4-9a88-24f53fa99d23"
+  subscription_id = var.azure_subscription_id
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
@@ -25,8 +25,7 @@ provider "helm" {
 }
 
 provider "nullplatform" {
-  np_apikey = "MTUxNDkzNDYxNg==.ZzQkUi0xWnFzRFh3aDdhOGZxQGFnSjk0NEEtS0dNWk8="
-  api_key = "MTUxNDkzNDYxNg==.ZzQkUi0xWnFzRFh3aDdhOGZxQGFnSjk0NEEtS0dNWk8="
-  alias = "default"
+  np_apikey = var.np_api_key
+  api_key   = var.np_api_key
 }
 
