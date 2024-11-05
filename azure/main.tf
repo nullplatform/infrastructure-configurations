@@ -1,6 +1,6 @@
 locals {
-  domain_name  = try(var.domain_name, "${var.organization}.nullapps.io")
-  cluster_name = "${var.organization}-${var.account}-cluster"
+  domain_name  = var.domain_name != null ? var.domain_name : "${var.organization}.nullapps.io"
+  cluster_name = var.cluster_name != null ? var.cluster_name : "${var.organization}-${var.account}-cluster"
 }
 
 module "resource_group" {
@@ -32,12 +32,10 @@ module "azure_dns" {
   providers = {
     azurerm = azurerm
   }
-  resource_group     = module.resource_group.resource_group_name
-  domain_name        = local.domain_name
-  virtual_network_id = module.vnet.vnet_id
+  resource_group = module.resource_group.resource_group_name
+  domain_name    = local.domain_name
   depends_on = [
-    module.resource_group,
-    module.vnet
+    module.resource_group
   ]
 }
 
