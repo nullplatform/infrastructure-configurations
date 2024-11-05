@@ -1,3 +1,8 @@
+variable "azure_subscription_id" {
+  type        = string
+  description = "Azure subscription id to create resources"
+}
+
 variable "location" {
   type        = string
   description = "The location/region where the resources should be created"
@@ -7,11 +12,6 @@ variable "location" {
 variable "domain_name" {
   type        = string
   description = "The domain name to use for the DNS zone"
-}
-
-variable "api_key" {
-  type        = string
-  description = "nullplatform API key"
 }
 
 variable "organization" {
