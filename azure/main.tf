@@ -4,7 +4,7 @@ locals {
 }
 
 module "resource_group" {
-  source = "./modules/resource-group"
+  source = "./modules/azure/resource-group"
   providers = {
     azurerm = azurerm
   }
@@ -14,7 +14,7 @@ module "resource_group" {
 }
 
 module "vnet" {
-  source = "./modules/vnet"
+  source = "./modules/azure/vnet"
   providers = {
     azurerm = azurerm
   }
@@ -28,7 +28,7 @@ module "vnet" {
 }
 
 module "azure_dns" {
-  source = "./modules/azure-dns"
+  source = "./modules/azure/dns"
   providers = {
     azurerm = azurerm
   }
@@ -40,7 +40,7 @@ module "azure_dns" {
 }
 
 module "aks" {
-  source = "./modules/aks-cluster"
+  source = "./modules/azure/aks"
   providers = {
     azurerm = azurerm
   }
@@ -58,7 +58,7 @@ module "aks" {
 }
 
 /*module "aks_config" {
-  source = "./modules/aks-config"
+  source = "./modules/nullplatform/aks-config"
   providers = {
     kubernetes = kubernetes
     helm       = helm.aks
@@ -70,7 +70,7 @@ module "aks" {
 }*/
 
 module "nullplatform" {
-  source = "./modules/nullplatform-azure"
+  source = "./modules/nullplatform"
   providers = {
     nullplatform = nullplatform
   }
