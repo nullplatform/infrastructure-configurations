@@ -32,8 +32,8 @@ module "azure_dns" {
   providers = {
     azurerm = azurerm
   }
-  resource_group = module.resource_group.resource_group_name
-  domain_name    = local.domain_name
+  resource_group     = module.resource_group.resource_group_name
+  domain_name        = local.domain_name
   virtual_network_id = module.vnet.vnet_id
   depends_on = [
     module.resource_group,
@@ -46,12 +46,12 @@ module "aks" {
   providers = {
     azurerm = azurerm
   }
-  resource_group_name  = module.resource_group.resource_group_name
-  location             = module.resource_group.resource_group_location
-  cluster_name         = local.cluster_name
-  vnet_subnet_id       = module.vnet.private_subnet_ids[0]
-  organization         = var.organization
-  account              = var.account
+  resource_group_name = module.resource_group.resource_group_name
+  location            = module.resource_group.resource_group_location
+  cluster_name        = local.cluster_name
+  vnet_subnet_id      = module.vnet.private_subnet_ids[0]
+  organization        = var.organization
+  account             = var.account
   depends_on = [
     module.azure_dns,
     module.resource_group,
@@ -74,9 +74,9 @@ module "aks" {
 module "nullplatform" {
   source = "./modules/nullplatform-azure"
   providers = {
-      nullplatform = nullplatform
+    nullplatform = nullplatform
   }
-  account = var.account
+  account      = var.account
   cluster_name = module.aks.cluster_name
   depends_on = [
     module.aks

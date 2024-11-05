@@ -3,7 +3,7 @@
 ################################################################################
 
 variable "account" {
-  type = string
+  type        = string
   description = "The null platform account slug"
 }
 

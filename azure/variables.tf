@@ -1,11 +1,11 @@
 variable "location" {
   type        = string
   description = "The location/region where the resources should be created"
-  default = "westus2"
+  default     = "westus2"
 }
 
 variable "domain_name" {
-  type = string
+  type        = string
   description = "The domain name to use for the DNS zone"
 }
 
@@ -22,6 +22,11 @@ variable "organization" {
 variable "account" {
   type        = string
   description = "The nullplatform default account slug"
+}
+
+variable "np_api_key" {
+  type        = string
+  description = "the Nullplatform api key"
 }
 
 variable "namespace" {
