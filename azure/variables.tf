@@ -12,7 +12,17 @@ variable "location" {
 variable "domain_name" {
   type        = string
   description = "The domain name to use for the DNS zone"
+  nullable    = true
+  default     = null
 }
+
+variable "cluster_name" {
+  type        = string
+  description = "The AKS Cluster name"
+  nullable    = true
+  default     = null
+}
+
 
 variable "organization" {
   type        = string

@@ -10,13 +10,13 @@ module "aks" {
   private_cluster_enabled           = false
   role_based_access_control_enabled = true
   rbac_aad                          = false
-  agents_size                       = "standard_basv2_v2"
+  agents_size                       = "Standard_A2_v2"
   net_profile_service_cidr          = "10.1.0.0/16"
   net_profile_dns_service_ip        = "10.1.0.10"
   node_pools = {
     cluster_node_pool = {
       name                        = "nodepool"
-      vm_size                     = "standard_basv2_v2"
+      vm_size                     = "Standard_A2_v2"
       enable_auto_scaling         = true
       min_count                   = 1
       max_count                   = 10
