@@ -23,7 +23,6 @@ variable "cluster_name" {
   default     = null
 }
 
-
 variable "organization" {
   type        = string
   description = "The nullplatform organization slug"
