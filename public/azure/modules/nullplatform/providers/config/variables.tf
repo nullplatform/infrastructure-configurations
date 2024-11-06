@@ -16,6 +16,11 @@ variable "cluster_name" {
   description = "The name of the EKS cluster"
 }
 
+variable "domain_name" {
+  type        = string
+  description = "The domain name used for this organization"
+}
+
 /*
 Azure Vars
 */
@@ -38,6 +43,11 @@ variable "azure_subscription_id" {
 variable "azure_tenant_id" {
   type        = string
   description = "Azure tenant id."
+}
+
+variable "azure_dns_resource_group_id" {
+  type        = string
+  description = "Azure Resource group where the managed DNS hosted zone was created"
 }
 
 /*
