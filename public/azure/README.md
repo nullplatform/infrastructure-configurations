@@ -45,6 +45,18 @@ When you ready, run the apply command to create the resources.
 
     tofu apply
 
+
+## Domain delegation
+
+If you decided to use a nullplatform subdomain, take note of the name servers created by terraform
+
+```
+tofu output name_servers
+tofu output domain_name
+```
+
+Ask nullplatform to complete the delegation by going [here](../../private/aws/dns/delegation)
+
 ## Cleanup the Resources we Created
 
 When we are done testing the setup and don't require the resources created anymore, we can use the steps below to remove them. 
