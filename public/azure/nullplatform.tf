@@ -16,3 +16,11 @@ module "nullplatform" {
     module.aks
   ]
 }
+
+
+# resource "nullplatform_account" "test" {
+#   name                = "updated-test-account"
+#   repository_prefix   = "updated-prefix"
+#   repository_provider = "gitlab"
+#   slug               = "updated-test-account"
+# }
