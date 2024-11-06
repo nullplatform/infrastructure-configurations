@@ -4,20 +4,14 @@ locals {
 }
 
 module "resource_group" {
-  source = "./modules/azure/resource-group"
-  providers = {
-    azurerm = azurerm
-  }
+  source       = "./modules/azure/resource-group"
   location     = var.location
   organization = var.organization
   account      = var.account
 }
 
 module "vnet" {
-  source = "./modules/azure/vnet"
-  providers = {
-    azurerm = azurerm
-  }
+  source         = "./modules/azure/vnet"
   location       = module.resource_group.resource_group_location
   resource_group = module.resource_group.resource_group_name
   organization   = var.organization
@@ -27,11 +21,8 @@ module "vnet" {
   ]
 }
 
-module "azure_dns" {
-  source = "./modules/azure/dns"
-  providers = {
-    azurerm = azurerm
-  }
+module "dns" {
+  source         = "./modules/azure/dns"
   resource_group = module.resource_group.resource_group_name
   domain_name    = local.domain_name
   depends_on = [
@@ -40,10 +31,7 @@ module "azure_dns" {
 }
 
 module "aks" {
-  source = "./modules/azure/aks"
-  providers = {
-    azurerm = azurerm
-  }
+  source              = "./modules/azure/aks"
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   cluster_name        = local.cluster_name
@@ -51,42 +39,13 @@ module "aks" {
   organization        = var.organization
   account             = var.account
   depends_on = [
-    module.azure_dns,
+    module.dns,
     module.resource_group,
     module.vnet
   ]
 }
 
-/*module "aks_config" {
-  source = "./modules/nullplatform/aks-config"
-  providers = {
-    kubernetes = kubernetes
-    helm       = helm.aks
-  }
-  depends_on = [
-    module.aks
-  ]
-  tls_secret_name = "wildcard-ey-poc-nullapps-io-tls"  # Delete this line
-}*/
-
-module "nullplatform" {
-  source = "./modules/nullplatform"
-  providers = {
-    nullplatform = nullplatform
-  }
-  account      = var.account
-  cluster_name = module.aks.cluster_name
-  depends_on = [
-    module.aks
-  ]
-}
-
-module "my_apps" {
-  for_each = var.application_names
-
-  source = "./modules/azure/acr"
-
-  application_name    = each.key
-  resource_group_name = module.resource_group.resource_group_name
-  location            = module.resource_group.resource_group_location
+module "credentials" {
+  source  = "./modules/azure/credentials"
+  account = var.account
 }
