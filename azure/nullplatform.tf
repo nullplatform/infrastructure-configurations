@@ -1,15 +1,3 @@
-/*module "aks_config" {
-  source = "./modules/nullplatform/providers/aks"
-  providers = {
-    kubernetes = kubernetes
-    helm       = helm.aks
-  }
-  depends_on = [
-    module.aks
-  ]
-  tls_secret_name = "wildcard-ey-poc-nullapps-io-tls"  # Delete this line
-}*/
-
 module "nullplatform" {
   source       = "./modules/nullplatform/providers/config"
   account      = var.account
