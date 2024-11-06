@@ -16,22 +16,45 @@ variable "cluster_name" {
   description = "The name of the EKS cluster"
 }
 
+/*
+Azure Vars
+*/
+
 variable "azure_client_id" {
-  type = string
-  description = "Azure credential id."  
+  type        = string
+  description = "Azure credential id."
 }
 
 variable "azure_client_secret" {
-  type = string
-  description = "Azure credential secret (password)."  
+  type        = string
+  description = "Azure credential secret (password)."
 }
 
 variable "azure_subscription_id" {
-  type = string
-  description = "Azure subscription id."  
+  type        = string
+  description = "Azure subscription id."
 }
 
 variable "azure_tenant_id" {
-  type = string
-  description = "Azure tenant id."  
+  type        = string
+  description = "Azure tenant id."
+}
+
+/*
+ACR Vars
+*/
+
+variable "acr_login_server" {
+  description = "ACR Login server name"
+  type        = string
+}
+
+variable "acr_username" {
+  description = "ACR username"
+  type        = string
+}
+
+variable "acr_password" {
+  description = "ACR password"
+  type        = string
 }

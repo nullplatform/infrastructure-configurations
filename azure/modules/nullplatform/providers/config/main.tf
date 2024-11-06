@@ -48,12 +48,12 @@ resource "nullplatform_provider_config" "acr" {
   type       = "docker-server"
   dimensions = {}
   attributes = jsonencode({
-    "this_is_a_test":"a random value",
+    "this_is_a_test" : "a random value",
     "setup" : {
-      "server" : "myapp4d47c7a49c89ede6d3a6c86a.azurecr.io",
-      "path" : "test-myapp",
-      "username" : "test",
-      "password" : "test",
+      "server" : var.acr_login_server,
+      "path" : "nullplatform",
+      "username" : var.acr_username,
+      "password" : var.acr_password,
       "use_namespace" : false
     },
     "repository_provider" : "docker_server"
