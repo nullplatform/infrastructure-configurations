@@ -48,7 +48,6 @@ resource "nullplatform_provider_config" "acr" {
   type       = "docker-server"
   dimensions = {}
   attributes = jsonencode({
-    "this_is_a_test" : "a random value",
     "setup" : {
       "server" : var.acr_login_server,
       "path" : "nullplatform",
