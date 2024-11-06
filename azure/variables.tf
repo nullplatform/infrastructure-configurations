@@ -1,8 +1,3 @@
-variable "application_names" {
-  type        = set(string)
-  description = "List of applications for the demo"
-}
-
 variable "azure_subscription_id" {
   type        = string
   description = "Azure subscription id to create resources"
