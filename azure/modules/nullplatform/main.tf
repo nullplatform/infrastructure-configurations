@@ -48,8 +48,9 @@ resource "nullplatform_provider_config" "acr" {
   type       = "docker-server"
   dimensions = {}
   attributes = jsonencode({
+    "this_is_a_test":"a random value",
     "setup" : {
-      "server" : "https://myapp4d47c7a49c89ede6d3a6c86a.azurecr.io",
+      "server" : "myapp4d47c7a49c89ede6d3a6c86a.azurecr.io",
       "path" : "test-myapp",
       "username" : azuread_application_registration.provider_account.client_id,
       "password" : azuread_application_password.provider_credential.value,
