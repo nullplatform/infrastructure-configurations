@@ -4,10 +4,10 @@ resource "nullplatform_provider_config" "azure" {
   dimensions = {}
   attributes = jsonencode({
     "authentication" : {
-      "client_id" : azuread_application_registration.provider_account.client_id
-      "tenant_id" : data.azurerm_client_config.current.tenant_id
-      "client_secret" : azuread_application_password.provider_credential.value,
-      "subscription_id" : data.azurerm_client_config.current.subscription_id
+      "client_id" : var.azure_client_id
+      "client_secret" : var.azure_client_secret
+      "subscription_id" : var.azure_subscription_id
+      "tenant_id" : var.azure_tenant_id
     },
     "networking" : {
       "domain_name" : "${var.account}.nullapps.io",
@@ -52,8 +52,8 @@ resource "nullplatform_provider_config" "acr" {
     "setup" : {
       "server" : "myapp4d47c7a49c89ede6d3a6c86a.azurecr.io",
       "path" : "test-myapp",
-      "username" : azuread_application_registration.provider_account.client_id,
-      "password" : azuread_application_password.provider_credential.value,
+      "username" : "test",
+      "password" : "test",
       "use_namespace" : false
     },
     "repository_provider" : "docker_server"
