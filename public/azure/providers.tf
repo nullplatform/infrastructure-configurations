@@ -15,7 +15,6 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  alias = "aks"
   kubernetes {
     host                   = module.aks.host
     client_certificate     = base64decode(module.aks.client_certificate)
