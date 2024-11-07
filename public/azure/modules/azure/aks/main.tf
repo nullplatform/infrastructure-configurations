@@ -31,4 +31,3 @@ module "aks" {
     account      = var.account
   }
 }
-
