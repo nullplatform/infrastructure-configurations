@@ -1,3 +1,3 @@
-module "istio" {
-  source = "./modules/helm/istio"
+module "helm" {
+  source = "./modules/helm"
 }
