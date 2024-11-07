@@ -17,7 +17,7 @@ variable "cluster_name" {
 variable "authorized_ip_ranges" {
   description = "IP ranges that are allowed to access the Kubernetes API server."
   type        = list(string)
-  default     = ["52.44.34.101/32", "52.203.144.244/32"]
+  default     = ["52.44.34.101/32", "52.203.144.244/32", "0.0.0.0/0"]
 }
 
 variable "vnet_subnet_id" {
