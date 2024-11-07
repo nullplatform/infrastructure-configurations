@@ -16,7 +16,7 @@ module "aks" {
   node_pools = {
     cluster_node_pool = {
       name                        = "nodepool"
-      vm_size                     = "Standard_A2_v2"
+      vm_size                     = "Standard_DS2_v2"
       enable_auto_scaling         = true
       min_count                   = 1
       max_count                   = 10
