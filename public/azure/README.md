@@ -45,7 +45,6 @@ When you ready, run the apply command to create the resources.
 
     tofu apply
 
-
 ## Domain delegation
 
 If you decided to use a nullplatform subdomain, take note of the name servers created by terraform
@@ -56,6 +55,34 @@ tofu output domain_name
 ```
 
 Ask nullplatform to complete the delegation by going [here](../../private/aws/dns/delegation)
+
+## Install nullplatform helm chart
+
+Install our chart to support log ingestion and to configure the gateway. Follow the setup of the repository [here](https://github.com/nullplatform/helm-charts)
+
+NOTE: AKS module installs metric server for us, no need for the chart to do it again
+NOTE: Update the secretName to wildcard-<<YOUR DOMAIN NAME REPLACING . by ->>
+
+1.- Login into azure
+```
+az account set --subscription your_subscription
+az login
+```
+2.- Configure kubectl with the context of the aks cluster created
+```
+az aks get-credentials --admin --resource-group your_resource_group --name your_cluster
+```
+3.- Grab the tls certificate secret name
+```
+kubectl get secrets -n gateways
+```
+4.- Install the chart
+```
+helm install nullplatform-base nullplatform/nullplatform-chart \
+--set metricsServer.enabled=false \
+--set global.provider=aks \
+--set tls.secretName=wildcard-<<your_domain_name | replace "." "-">>-tls #<-- this name should be the same taken from #3
+```
 
 ## Cleanup the Resources we Created
 

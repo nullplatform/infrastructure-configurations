@@ -17,10 +17,19 @@ resource "helm_release" "cert-manager" {
   }
 }
 
+# HACK: Created it here to avoid having to fail on the certificate
+data "kubernetes_namespace" "gateways" {
+  metadata {
+    name = "gateways"
+  }
+}
+
 resource "helm_release" "cert-manager-config" {
   name = "${local.name}-config"
 
-  repository = "${path.module}"
+  depends_on = [data.kubernetes_namespace.gateways]
+
+  repository = path.module
   chart      = "cert-manager-config"
   namespace  = local.namespace
 
