@@ -32,10 +32,6 @@ resource "nullplatform_provider_config" "aks" {
       "namespace" : "gateways",
       "public_name" : "gateway-public",
     },
-    "networking" : {
-      "public_balancer_ip" : "172.179.53.237",
-      "balancer_ip" : "10.0.1.6",
-    },
     "web_pool_provider" : "AZURE:WEB_POOL:AKS"
   })
   depends_on = [
