@@ -17,40 +17,33 @@ resource "helm_release" "cert-manager" {
   }
 }
 
-# HACK: Created it here to avoid having to fail on the certificate
-data "kubernetes_namespace" "gateways" {
-  metadata {
-    name = "gateways"
-  }
-}
-
+# This might fail if we do not install nullplatform base chart, if so, reexecuting terraform after manual step might solve the issue
 resource "helm_release" "cert-manager-config" {
   name = "${local.name}-config"
 
-  depends_on = [data.kubernetes_namespace.gateways]
-
-  repository = path.module
-  chart      = "cert-manager-config"
-  namespace  = local.namespace
+  repository       = "https://nullplatform.github.io/helm-charts"
+  chart            = "nullplatform-${local.name}-config"
+  create_namespace = true
+  namespace        = local.namespace
 
   set {
-    name  = "subscriptionId"
+    name  = "azure.subscriptionId"
     value = var.subscription_id
   }
 
   set {
-    name  = "resourceGroupName"
+    name  = "azure.resourceGroupName"
     value = var.resource_group_name
+  }
+
+  set {
+    name  = "azure.clientId"
+    value = var.client_id
   }
 
   set {
     name  = "hostedZoneName"
     value = var.domain_name
-  }
-
-  set {
-    name  = "clientId"
-    value = var.client_id
   }
 
 }

@@ -83,6 +83,7 @@ helm install nullplatform-base nullplatform/nullplatform-chart \
 --set global.provider=aks \
 --set tls.secretName=wildcard-<<your_domain_name | replace "." "-">>-tls #<-- this name should be the same taken from #3
 ```
+NOTE: After installing this chart it might be needed to re run tofu to create the certificate
 
 ## Cleanup the Resources we Created
 
