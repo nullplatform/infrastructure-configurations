@@ -6,4 +6,5 @@ resource "azuread_application_registration" "provider_account" {
 
 resource "azuread_application_password" "provider_credential" {
   application_id = azuread_application_registration.provider_account.id
+  display_name   = "rbac"
 }

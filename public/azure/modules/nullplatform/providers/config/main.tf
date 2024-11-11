@@ -31,6 +31,7 @@ resource "nullplatform_provider_config" "aks" {
     "gateway" : {
       "namespace" : "gateways",
       "public_name" : "gateway-public",
+      "private_name": "gateway-private"
     },
     "web_pool_provider" : "AZURE:WEB_POOL:AKS"
   })

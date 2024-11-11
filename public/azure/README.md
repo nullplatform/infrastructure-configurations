@@ -78,7 +78,7 @@ kubectl get secrets -n gateways
 ```
 4.- Install the chart
 ```
-helm install nullplatform-base nullplatform/nullplatform-chart \
+helm install nullplatform-base nullplatform/nullplatform-base \
 --set metricsServer.enabled=false \
 --set global.provider=aks \
 --set tls.secretName=wildcard-<<your_domain_name | replace "." "-">>-tls #<-- this name should be the same taken from #3
