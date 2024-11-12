@@ -39,6 +39,7 @@ module "aks" {
   vnet_subnet_id      = module.vnet.private_subnet_ids[0]
   organization        = var.organization
   account             = var.account
+  registry_name       = module.acr.registry_name
   subscription_id     = var.azure_subscription_id
   depends_on = [
     module.dns,
