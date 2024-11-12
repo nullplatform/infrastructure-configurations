@@ -23,8 +23,9 @@ resource "azuread_service_principal_password" "provider_credential" {
 }
 
 resource "azurerm_role_assignment" "assig2" {
-  scope                = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}"
-  role_definition_name = "Contributor"
+  scope = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_name}"
+  # /providers/Microsoft.ContainerService/managedClusters/davidcohan"
+  role_definition_name = "Owner"
   principal_id         = azuread_service_principal.principal.object_id
 }
 

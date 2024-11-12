@@ -7,6 +7,16 @@ variable "account" {
   description = "The null platform account slug"
 }
 
+variable "account_id" {
+  type        = string
+  description = "The null platform account id"
+}
+
+variable "organization_id" {
+  type        = string
+  description = "The null platform organization id"
+}
+
 ################################################################################
 # Variables from other Modules
 ################################################################################
@@ -45,7 +55,7 @@ variable "azure_tenant_id" {
   description = "Azure tenant id."
 }
 
-variable "azure_dns_resource_group_id" {
+variable "azure_resource_group_id" {
   type        = string
   description = "Azure Resource group where the managed DNS hosted zone was created"
 }
@@ -67,4 +77,5 @@ variable "acr_username" {
 variable "acr_password" {
   description = "ACR password"
   type        = string
+  sensitive   = false
 }
