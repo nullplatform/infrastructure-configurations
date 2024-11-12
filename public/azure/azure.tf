@@ -48,8 +48,11 @@ module "aks" {
 }
 
 module "credentials" {
-  source  = "./modules/azure/credentials"
-  account = var.account
+  source              = "./modules/azure/credentials"
+  account             = var.account
+  cluster_name        = local.cluster_name
+  resource_group_name = module.resource_group.resource_group_name
+  subscription_id     = module.credentials.subscription_id
 }
 
 module "acr" {
