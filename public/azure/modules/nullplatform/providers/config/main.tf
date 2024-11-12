@@ -13,6 +13,7 @@ resource "nullplatform_provider_config" "azure" {
       "domain_name" : "${var.account}.nullapps.io",
       "public_dns_zone_name" : var.domain_name,
       "public_dns_zone_resource_group_name" : var.azure_resource_group_id,
+      "application_domain": false
     },
     }
   )
