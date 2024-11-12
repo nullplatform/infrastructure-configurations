@@ -1,3 +1,9 @@
-module "istio" {
-  source = "./modules/helm/istio"
+module "helm" {
+  source = "./modules/helm"
+
+  client_id           = module.aks.kubelet_client_id
+  domain_name         = local.domain_name
+  resource_group_name = module.resource_group.resource_group_name
+  subscription_id     = var.azure_subscription_id
 }
+

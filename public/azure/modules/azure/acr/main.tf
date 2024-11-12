@@ -17,6 +17,10 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = var.resource_group_name
   location            = var.location
   sku                 = var.sku
+
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
 
 resource "azurerm_container_registry_scope_map" "scope" {
@@ -30,6 +34,10 @@ resource "azurerm_container_registry_scope_map" "scope" {
     "repositories/*/metadata/read",
     "repositories/*/metadata/write",
   ]
+
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
 
 resource "azurerm_container_registry_token" "token" {

@@ -8,3 +8,13 @@ output "domain_name" {
   value       = local.domain_name
 }
 
+output "client_id" {
+  description = "Azure credentials client id."
+  value       = module.credentials.client_id
+}
+
+output "client_secret" {
+  description = "Azure credentials client secret (password)."
+  value       = module.credentials.client_secret
+  sensitive   = true
+}

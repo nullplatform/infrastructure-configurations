@@ -3,6 +3,11 @@ output "login_server" {
   value       = azurerm_container_registry.acr.login_server
 }
 
+output "registry_name" {
+  description = "The ACR registry name"
+  value       = azurerm_container_registry.acr.name
+}
+
 output "token_name" {
   description = "Azure token name (user for docker login)"
   value       = var.token_name

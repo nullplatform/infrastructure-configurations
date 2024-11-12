@@ -28,9 +28,19 @@ variable "organization" {
   description = "The nullplatform organization slug"
 }
 
+variable "organization_id" {
+  type        = string
+  description = "The nullplatform organization id"
+}
+
 variable "account" {
   type        = string
   description = "The nullplatform default account slug"
+}
+
+variable "account_id" {
+  type        = string
+  description = "The nullplatform default account id"
 }
 
 variable "np_api_key" {
@@ -44,3 +54,4 @@ variable "namespace" {
   nullable    = true
   default     = null
 }
+

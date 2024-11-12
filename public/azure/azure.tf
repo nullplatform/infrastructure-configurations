@@ -35,9 +35,12 @@ module "aks" {
   resource_group_name = module.resource_group.resource_group_name
   location            = module.resource_group.resource_group_location
   cluster_name        = local.cluster_name
+  domain_name         = local.domain_name
   vnet_subnet_id      = module.vnet.private_subnet_ids[0]
   organization        = var.organization
   account             = var.account
+  registry_name       = module.acr.registry_name
+  subscription_id     = var.azure_subscription_id
   depends_on = [
     module.dns,
     module.resource_group,
@@ -46,8 +49,11 @@ module "aks" {
 }
 
 module "credentials" {
-  source  = "./modules/azure/credentials"
-  account = var.account
+  source              = "./modules/azure/credentials"
+  account             = var.account
+  cluster_name        = local.cluster_name
+  resource_group_name = module.resource_group.resource_group_name
+  subscription_id     = module.credentials.subscription_id
 }
 
 module "acr" {

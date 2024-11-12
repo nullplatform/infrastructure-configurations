@@ -1,5 +1,5 @@
 resource "nullplatform_provider_config" "azure" {
-  account    = var.account
+  nrn        = "organization=${var.organization_id}:account=${var.account_id}"
   type       = "azure-configuration"
   dimensions = {}
   attributes = jsonencode({
@@ -12,31 +12,28 @@ resource "nullplatform_provider_config" "azure" {
     "networking" : {
       "domain_name" : "${var.account}.nullapps.io",
       "public_dns_zone_name" : var.domain_name,
-      "public_dns_zone_resource_group_name" : var.azure_dns_resource_group_id,
+      "public_dns_zone_resource_group_name" : var.azure_resource_group_id,
+      "application_domain": false
     },
     }
   )
 }
 
 resource "nullplatform_provider_config" "aks" {
-  account    = var.account
+  nrn        = "organization=${var.organization_id}:account=${var.account_id}"
   type       = "aks-configuration"
   dimensions = {}
   attributes = jsonencode({
     "cluster" : {
-      "id" : "${var.account}-main-cluster",
+      "id" : var.cluster_name,
       "namespace" : "nullplatform",
-      "resource_group" : "rg-${var.account}-main",
+      "resource_group" : var.azure_resource_group_id,
     },
     "gateway" : {
       "namespace" : "gateways",
       "public_name" : "gateway-public",
+      "private_name" : "gateway-private"
     },
-    "networking" : {
-      "public_balancer_ip" : "172.179.53.237",
-      "balancer_ip" : "10.0.1.6",
-    },
-    "web_pool_provider" : "AZURE:WEB_POOL:AKS"
   })
   depends_on = [
     nullplatform_provider_config.azure
@@ -44,7 +41,7 @@ resource "nullplatform_provider_config" "aks" {
 }
 
 resource "nullplatform_provider_config" "acr" {
-  account    = var.account
+  nrn        = "organization=${var.organization_id}:account=${var.account_id}"
   type       = "docker-server"
   dimensions = {}
   attributes = jsonencode({

@@ -27,3 +27,8 @@ output "cluster_ca_certificate" {
   description = "The Kubernetes API server cluster CA certificate."
   value       = module.aks.cluster_ca_certificate
 }
+
+output "kubelet_client_id" {
+  description = "The managed identity client id."
+  value       = module.aks.kubelet_identity[0].client_id
+}

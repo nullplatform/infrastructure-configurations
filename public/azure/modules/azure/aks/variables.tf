@@ -14,6 +14,11 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "domain_name" {
+  type        = string
+  description = "The domain name to use for the DNS zone"
+}
+
 variable "authorized_ip_ranges" {
   description = "IP ranges that are allowed to access the Kubernetes API server."
   type        = list(string)
@@ -32,5 +37,15 @@ variable "organization" {
 
 variable "account" {
   description = "The account identifier for tagging."
+  type        = string
+}
+
+variable "subscription_id" {
+  description = "The Azure subscription id."
+  type        = string
+}
+
+variable "registry_name" {
+  description = "The registry name created in ACR"
   type        = string
 }
