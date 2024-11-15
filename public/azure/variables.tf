@@ -3,6 +3,28 @@ variable "azure_subscription_id" {
   description = "Azure subscription id to create resources"
 }
 
+variable "azure_resource_group_name" {
+  type        = string
+  description = "Wheter to use this rg or to create one. With null one will be created"
+}
+
+variable "azure_vnet" {
+  type        = map(any)
+  description = "Metadata that a subnet has"
+  default     = {}
+}
+
+variable "azure_credential" {
+  type        = map(any)
+  description = "Credentials to configure null cloud provider"
+  default     = {}
+}
+
+variable "azure_tenant_id" {
+  type        = string
+  description = "The Azure tenant id where the subscription exists"
+}
+
 variable "location" {
   type        = string
   description = "The location/region where the resources should be created"
