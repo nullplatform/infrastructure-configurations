@@ -83,7 +83,12 @@ helm install nullplatform-base nullplatform/nullplatform-base \
 --set global.provider=aks \
 --set tls.secretName=wildcard-<<your_domain_name | replace "." "-">>-tls #<-- this name should be the same taken from #3
 ```
-NOTE: After installing this chart it might be needed to re run tofu to create the certificate
+*NOTE*: After installing this chart it might be needed to re run tofu to create the certificate
+
+*NOTE*: Review any other argument for configuring [logging](https://github.com/nullplatform/helm-charts/tree/main/charts/base).
+
+5.- When we create the scope Pick Kubernetes
+5.1- Enable Datadog Logging from Advanced settings in the scope view and follow [this](https://docs.nullplatform.com/docs/scopes/datadog) procedure
 
 ## Cleanup the Resources we Created
 
