@@ -15,8 +15,40 @@
 Before we proceed and provision AKs Cluster using OpenTofu, there are a few commands or tools you need to have in the server where you will be creating the cluster from.
 
     1. azcli
+
+    ```
+    az login --service-principal -u <<user>> -p <<pass>> --tenant <<tenant>>
+    ```
    
     2. helm
+
+    3. nullplatform token 
+
+    ```
+    curl --request POST \
+        --url https://authz.nullplatform.io/apikey \
+        --header "Authorization: Bearer $NP_TOKEN" \
+        --header 'content-type: application/json' \
+        --data '{
+            "name": "my_token",
+            "grants": [
+                {
+                    "nrn": "organization=<<ORGID>>",
+                    "role_id": 572915741
+                },
+                {
+                    "nrn": "organization=<<ORGID>>",
+                    "role_id": 642777134
+            },
+            {
+                    "nrn": "organization=<<ORGID>>",
+                    "role_id": 515440655
+                }
+            ],
+            "tags": {"machine":true }
+        }
+        '
+    ```
 
 ### Assumptions
 
@@ -36,6 +68,10 @@ Initialize the project to pull all the modules used
 Validate that the project is correctly setup. 
 
     tofu validate
+
+Create a new workspace
+    tofu workspace new $ORGANIZATION_NAME
+    tofu workspace select $ORGANIZATION_NAME
 
 Run the plan command to see all the resources that will be created
 
@@ -87,8 +123,17 @@ helm install nullplatform-base nullplatform/nullplatform-base \
 
 *NOTE*: Review any other argument for configuring [logging](https://github.com/nullplatform/helm-charts/tree/main/charts/base).
 
-5.- When we create the scope Pick Kubernetes
-5.1- Enable Datadog Logging from Advanced settings in the scope view and follow [this](https://docs.nullplatform.com/docs/scopes/datadog) procedure
+5.- Ask Nullplatform team to update settings via api
+
+```
+{
+  "global.domain": "<<your_domain_name>>",
+  "global.useAccountSlugInCustomDomain": "false"
+}
+```
+
+6.- When we create the scope Pick Kubernetes
+6.1- Enable Datadog Logging from Advanced settings in the scope view and follow [this](https://docs.nullplatform.com/docs/scopes/datadog) procedure
 
 ## Cleanup the Resources we Created
 
