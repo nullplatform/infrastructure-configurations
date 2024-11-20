@@ -9,6 +9,5 @@ variable "account" {
 }
 
 variable "vpc" {
-  type        = map(object)
   description = "A VPC with public and private subnets"
 }

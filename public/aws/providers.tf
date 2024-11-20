@@ -1,15 +1,13 @@
 provider "nullplatform" {
-  np_apikey = var.api_key
-  alias = "default"
+  api_key = var.api_key
 }
 
 provider "aws" {
-  alias   = "default"
   region  = var.region
+  profile = "bombo-nullplatform-stage"
 }
 
 provider "kubernetes" {
-  alias                  = "eks"
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
   exec {
@@ -20,7 +18,6 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  alias = "eks"
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)

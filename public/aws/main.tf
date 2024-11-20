@@ -12,7 +12,8 @@ module "vpc" {
     aws = aws
   }
   organization = var.organization
-  account = var.account
+  account      = var.account
+  vpc          = var.vpc
 }
 
 ################################################################################
@@ -39,10 +40,10 @@ module "acm" {
   providers = {
     aws = aws
   }
-  domain_name = var.domain_name
-  zone_id     = module.route53.public_zone_id
+  domain_name  = var.domain_name
+  zone_id      = module.route53.public_zone_id
   organization = var.organization
-  account = var.account
+  account      = var.account
 }
 
 ################################################################################
@@ -55,7 +56,7 @@ module "iam_roles_policies" {
     aws = aws
   }
   organization = var.organization
-  account = var.account
+  account      = var.account
 }
 
 ################################################################################
@@ -110,7 +111,7 @@ module "aws_alb_controller" {
 module "nullplatform_configuration" {
   source = "./modules/nullplatform-aws"
   providers = {
-    aws = aws
+    aws          = aws
     nullplatform = nullplatform
   }
   api_key                               = var.api_key
