@@ -1,8 +1,8 @@
 module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
+  source = "terraform-aws-modules/vpc/aws"
 
   name = "nullplatform-vpc"
-  cidr = "10.0.0.0/16"
+  cidr = var.vpc["cidr"]
 
   providers = {
     aws = aws
@@ -10,11 +10,9 @@ module "vpc" {
 
   enable_dns_hostnames = true
 
-  azs = ["us-east-2a", "us-east-2b", "us-east-2c"]
-  #private_subnets     = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
-  #public_subnets      = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 4)]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+  azs             = var.vpc["azs"]
+  private_subnets = var.vpc["private_subnets"]
+  public_subnets  = var.vpc["public_subnets"]
 
   enable_nat_gateway = true
 
