@@ -3,25 +3,24 @@
 variable "domain_name" {
   type        = string
   description = "The domain name to use for nullplatform applications"
-  default     = "bombo.nullapps.io"
+  default     = "<<MY_ORG>>.nullapps.io"
 }
 
 variable "api_key" {
   type        = string
   description = "nullplatform API key"
-  default     = "MTkwNjQ0NzI5OA==.REkyK1p6diNoalBjQCZnSXkzZXJ3UjNwWW41Jitkdk4="
 }
 
 variable "organization" {
   type        = string
   description = "The nullplatform organization slug"
-  default     = "bombo"
+  default     = "<<MY_ORG>>"
 }
 
 variable "account" {
   type        = string
   description = "The nullplatform default account slug"
-  default     = "stage"
+  default     = "<<MY_ACCOUNT>>"
 }
 
 variable "namespace" {

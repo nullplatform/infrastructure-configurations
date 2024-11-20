@@ -7,7 +7,7 @@ variable "region" {
 }
 
 variable "account" {
-  type = string
+  type        = string
   description = "The null platform account slug"
 }
 
@@ -28,6 +28,20 @@ variable "cluster_name" {
 variable "application_manager_role" {
   type        = string
   description = "The ARN of the null-application-role"
+}
+
+variable "domain_name" {
+  type = string
+}
+
+variable "hosted_zone_id" {
+  type        = string
+  description = "The Hosted zone if for the private dns"
+}
+
+variable "hosted_public_zone_id" {
+  type        = string
+  description = "The Hosted zone if for the public dns"
 }
 
 variable "scope_manager_role" {

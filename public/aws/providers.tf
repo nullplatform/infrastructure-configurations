@@ -4,7 +4,6 @@ provider "nullplatform" {
 
 provider "aws" {
   region  = var.region
-  profile = "bombo-nullplatform-stage"
 }
 
 provider "kubernetes" {

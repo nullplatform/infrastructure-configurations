@@ -123,4 +123,9 @@ module "nullplatform_configuration" {
   telemetry_manager_role                = module.iam_roles_policies.nullplatform_telemetry_manager_role_arn
   build_workflow_user_access_key_id     = module.iam_roles_policies.nullplatform_build_workflow_user_access_key_id
   build_workflow_user_secret_access_key = module.iam_roles_policies.nullplatform_build_workflow_user_secret_access_key
+
+      domain_name           = var.domain_name
+      hosted_zone_id        = module.route53.private_zone_id
+      hosted_public_zone_id = module.route53.public_zone_id
+   
 }
