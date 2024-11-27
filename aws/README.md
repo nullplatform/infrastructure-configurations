@@ -18,6 +18,10 @@ Before we proceed and provision EKS Cluster using OpenTofu, there are a few comm
    
     2. kubectl
 
+    3. null token
+
+For null tokens see [here](../docs/null_token.md).
+
 ### Assumptions
 
 The following details makes the following assumptions.
@@ -34,7 +38,12 @@ Update the `variables.tf` profile and region variables if you are not using the 
 
 Initialize the project to pull all the modules used
 
-    tofu init
+    tofu init \
+        -backend-config="bucket=your-s3-bucket-name" \
+        -backend-config="key=path/to/terraform/state" \
+        -backend-config="region=us-west-2" \
+        -backend-config="encrypt=true" \
+        -backend-config="dynamodb_table=your-dynamodb-table"
 
 Validate that the project is correctly setup. 
 
@@ -42,11 +51,24 @@ Validate that the project is correctly setup.
 
 Run the plan command to see all the resources that will be created
 
-    tofu plan
+    tofu plan \
+        -var="domain_name=mycustomdomain.io" \
+        -var="api_key=your-api-key-here" \
+        -var="organization=myorganization" \
+        -var="account=myaccount" \
+        -var="namespace=mynamespace" \
+        -var="region=us-east-1"
 
 When you ready, run the apply command to create the resources. 
 
-    tofu apply
+    tofu apply \
+        -var="domain_name=mypoc.nullapps.io" \
+        -var="api_key=your-api-key-here" \
+        -var="organization=myorganization" \
+        -var="account=myaccount" \
+        -var="namespace=mynamespace" \
+        -var="region=us-east-1"
+
 
 ## Setup Steps. 
 
@@ -57,9 +79,22 @@ Kubernetes Cluster Nodes will be created as part of Auto-Scaling groups and will
 
 When we are done testing the setup and don't require the resources created anymore, we can use the steps below to remove them. 
 
-    1.1 tofu init
 
-    1.2 tofu destroy
+    tofu init \
+        -backend-config="bucket=your-s3-bucket-name" \
+        -backend-config="key=path/to/terraform/state" \
+        -backend-config="region=us-west-2" \
+        -backend-config="encrypt=true" \
+        -backend-config="dynamodb_table=your-dynamodb-table"
+    
+    tofu destroy \
+        -var="domain_name=mypoc.nullapps.io" \
+        -var="api_key=your-api-key-here" \
+        -var="organization=myorganization" \
+        -var="account=myaccount" \
+        -var="namespace=mynamespace" \
+        -var="region=us-east-1"
+
 
 If you get errors deleting the resources, remove the .terraform folder and destroy again.
 

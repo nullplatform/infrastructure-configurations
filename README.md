@@ -4,23 +4,35 @@
     </a>
     <br>
     <br>
-    Nullplatform IAC Configuration Blueprints
+    Nullplatform IAC Provider Blueprints
     <br>
 </h2>
+
+# Purpose
+
+This placeholder contains working examples of configurations that will allow to create infrastructure needed to test Nulplatform organized by supported Cloud Providers
 
 # Index Content
 
 ```
 .
-├── private
-└── public
-    ├── aws
-    └── azure
+├── aws
+└── azure
 ```
- ## Private 
 
- Code to be managed by Nullplatform team, internal binding operations intended to operate, follow the readme for further details
+## Global prerequitites
 
- ## Public
+1. Have a nullplatform organization
+2. Have a nullplatform account
 
- Code to be managed by anyone interested on making tests on Nullplatform with their own infrastructure, please note is likely to need both public and private parts to be executed in order to have a fully functional poc, follow the [readme](./public/README.md) for further details [GitHub Pages](https://pages.github.com/).
+## Tools prerequisites
+Before we proceed and provision resources using Terraform, there are a tools you need to have in the server where you will be creating any resource.
+
+- OpenTofu
+- Helm cli
+
+## Suppored providers
+
+- [AWS](./aws/README.md)
+- [Azure](./azure/README.md)
+- [GCP](./gcp/README.md)
