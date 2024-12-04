@@ -4,49 +4,24 @@ on:
   pull_request:
     types:
       - opened
-      - synchronize
       - reopened
-      - ready_for_review
-      - converted_to_draft
+      - synchronize
+    branches:
+      - main
 
 permissions:
   contents: read
-  actions: read
   id-token: write
+  actions: read
   pull-requests: write
   security-events: write
-  statuses: write
 
 
 jobs:
-  # ci-linting:
-  #   name: Linting of Terraform modules
-  #   uses: DigitalFemsa-Genesys/genesys-ci-cd-workflows/.github/workflows/terraform-linting.yaml@v1
-  #   with:
-  #     runs-on-json: ${{ vars.GSYS_RUNS_ON_JSON != '' && vars.GSYS_RUNS_ON_JSON || '"ubuntu-latest"' }}
-  #     propagate-failure: true
-  #     access-private-modules: true
-  #   secrets:
-  #     PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
-
-  # ci-analysis:
-  #   needs:
-  #     - ci-linting
-  #   uses: DigitalFemsa-Genesys/genesys-ci-cd-workflows/.github/workflows/terraform-ci-analysis.yaml@v1
-  #   with:
-  #     runs-on-json: ${{ vars.GSYS_RUNS_ON_JSON != '' && vars.GSYS_RUNS_ON_JSON || '"ubuntu-latest"' }}
-  #     propagate-failure: false
-  #   secrets:
-  #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-  ci-example-plan:
-    if: ${{ !github.event.pull_request.draft }}
+  ci-terraform:
     uses: ./.github/workflows/terraform-execution.yml
     with:
-      runs-on-json: ${{ vars.GSYS_RUNS_ON_JSON != '' && vars.GSYS_RUNS_ON_JSON || '"ubuntu-latest"' }}
-      path: 'aws'
       apply: false
       destroy: false
-      environment: 'demo'
     secrets:
       PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
