@@ -1,0 +1,144 @@
+name: 'Terraform Execution'
+
+on:
+  workflow_call:
+    inputs:
+      runs-on-json:
+        description: 'JSON string to be converted into an object to be passed to the runs-on attribute'
+        type: string
+        default: ''
+      path:
+        description: 'Path to the Terraform code'
+        type: string
+        required: false
+      environment:
+        description: 'Environment to deploy'
+        type: string
+        required: false
+      apply:
+        description: 'Apply the changes'
+        type: boolean
+        default: false
+      destroy:
+        description: 'Destroy the resources'
+        type: boolean
+        default: false
+    secrets:
+      PRIVATE_MODULES_TOKEN:
+        description: 'Token used to access private modules'
+        required: true
+
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  execution:
+    name: 'Terraform Execution'
+    environment: ${{ inputs.environment }}
+    runs-on: ${{ (inputs.runs-on-json != '' && fromJson(inputs.runs-on-json)) || (vars.GSYS_RUNS_ON_JSON != '' && fromJson(vars.GSYS_RUNS_ON_JSON)) || 'ubuntu-latest' }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.path }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Get code revision'
+        id: get-revision
+        run: |
+          echo "code_revision=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: 'Asume GitHub Actions role ${{ vars.AWS_ROLE }} in account${{ vars.AWS_ACCOUNT_ID }}'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.AWS_ROLE }}
+          role-duration-seconds: 3600
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: 'Enable access to Genesys TF modules'
+        uses: philips-labs/terraform-private-modules-action@v1.2
+        with:
+          org: DigitalFemsa-Genesys
+          token: ${{ secrets.PRIVATE_MODULES_TOKEN }}
+
+      - name: 'Setup Terraform'
+        uses: hashicorp/setup-terraform@v3
+
+      - name: 'Terraform Init'
+        id: init
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ vars.AWS_S3_BACKEND_BUCKET }}" \
+            -backend-config="region=${{ vars.AWS_S3_BACKEND_REGION || vars.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ vars.AWS_S3_BACKEND_DYNAMODB_TABLE }}" \
+            -backend-config="key=${{ github.repository }}/paths/${{ inputs.path }}/terraform.tfstate"
+
+      - name: 'Terraform Validate'
+        id: validate
+        run: |
+          terraform validate -no-color
+
+      - name: "Terraform ${{ (inputs.apply && 'Apply') || 'Plan' }}${{ (inputs.destroy && ' Destroy') || '' }}"
+        id: execution
+        env:
+          TF_VAR_environment: ${{ inputs.environment || 'dev' }}
+        run: |
+          terraform_command="${{ (inputs.apply && 'apply -auto-approve') || 'plan' }}"
+          if [ "${{ inputs.destroy }}" = "true" ]; then
+            terraform_command="destroy -auto-approve"
+          fi
+          echo $terraform_command
+          terraform $terraform_command \
+            -var-file=conf/terraform.tfvars \
+            -var-file=conf/${{ inputs.environment || 'dev' }}/terraform.tfvars \
+            ${{ github.event_name == 'pull_request' && '-no-color ' || ''}}-input=false
+        continue-on-error: true
+
+      - name: "Trim Terraform output for a maximum of 55000 characters"
+        id: trim-output
+        if: github.event_name == 'pull_request' && steps.execution.outcome == 'success'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        env:
+          EXECUTION_STDOUT: ${{ steps.execution.outputs.stdout }}
+          EXECUTION_STDERR: ${{ steps.execution.outputs.stderr }}
+        with:
+          result-encoding: string
+          script: |
+            const { EXECUTION_STDOUT, EXECUTION_STDERR } = process.env;
+            const output = [EXECUTION_STDOUT, EXECUTION_STDERR].join('\n');
+            // Trim the output so that only the last 60000 characters are returned
+            const trimmed_output = output.slice(Math.max(output.length - 60000, 0));
+
+            return trimmed_output;
+
+      - name: 'Post the terraform execution on PR'
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: terraform-execution
+          hide_and_recreate: true
+          message: |
+            ### Terraform :robot: Plan :memo: ${{ (inputs.destroy && ' Destroy :warning:') || '' }}
+            Status: `${{ steps.execution.outcome }}` ${{ (steps.execution.outcome == 'success' && ':white_check_mark:' || ':x:') }}
+
+            Details:
+            <details>
+            <summary>Show Plan :eyes:</summary>
+
+            ```
+            ...[maybe truncated]
+            ${{ (steps.trim-output.outcome == 'success' && steps.trim-output.outputs.result) || 'Please check the latest run for more details.' }}
+            ```
+            </details>
+
+            Actor: @${{ github.actor }}
+            Git SHA: `${{ github.sha }}`
+
+      - name: 'Fail if terraform execution failed'
+        if: steps.execution.outcome != 'success'
+        run: |
+          exit 1

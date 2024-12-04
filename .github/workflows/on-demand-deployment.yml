@@ -1,0 +1,40 @@
+name: 'On-Demand Deployment'
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        type: string
+        required: true
+        default: 'demo'
+      apply:
+        description: 'Apply the Terraform changes'
+        default: false
+        type: 'boolean'
+      destroy:
+        description: 'Destroy the Terraform resources'
+        default: false
+        type: 'boolean'
+      folder:
+        description: 'Folder containing the Terraform code to deploy'
+        type: 'string'
+        default: 'standard'
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  cd-terraform:
+    # Only execute this job from the main branch
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/terraform-execution.yml
+    with:
+      apply: ${{inputs.apply}}
+      destroy: ${{inputs.destroy}}
+      path: '${{inputs.folder}}'
+      environment: '${{inputs.environment}}'
+    secrets:
+      PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
