@@ -1,0 +1,27 @@
+name: Continous Integration
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+  pull-requests: write
+  security-events: write
+
+
+jobs:
+  ci-terraform:
+    uses: ./.github/workflows/terraform-execution.yml
+    with:
+      apply: false
+      destroy: false
+    secrets:
+      PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
