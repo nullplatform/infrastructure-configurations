@@ -19,7 +19,7 @@ crash.log
 *.tfplan
 
 # Ignore generated variable files
-*.tfvars
+#*.tfvars
 *.tfvars.json
 
 # Ignore override files
