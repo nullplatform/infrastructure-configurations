@@ -26,7 +26,6 @@ variable "account" {
 variable "nrn" {
   type        = string
   description = "The NRN to register providers"
-  default     = "organization=1255165411:account=95118862:namespace=1851786079"
 }
 
 variable "namespace" {
