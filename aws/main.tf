@@ -47,6 +47,38 @@ module "acm" {
 }
 
 ################################################################################
+# LB and SGs for EC2
+################################################################################
+
+module "alb" {
+  source = "./modules/ec2-alb"
+  providers = {
+    aws = aws
+  }
+
+  certificate_arn    = module.acm.acm_certificate_arn
+  public_subnet_ids  = module.vpc.public_subnets
+  private_subnet_ids = module.vpc.private_subnets
+  vpc_id             = module.vpc.vpc_id
+  vpc_cidr           = var.vpc["cidr"]
+}
+
+################################################################################
+# Buckets and Secret for objects
+################################################################################
+
+module "s3" {
+  source = "./modules/s3-buckets"
+  providers = {
+    aws = aws
+  }
+
+  organization = var.organization
+  account      = var.account
+  namespace    = var.namespace
+}
+
+################################################################################
 # IAM ROLES & POLICIES Module
 ################################################################################
 
@@ -55,8 +87,12 @@ module "iam_roles_policies" {
   providers = {
     aws = aws
   }
-  organization = var.organization
-  account      = var.account
+
+  organization              = var.organization
+  account                   = var.account
+  assets_bucket_arn         = module.s3.assets_bucket_arn
+  parameters_bucket_arn     = module.s3.parameters_bucket_arn
+  parameters_encryption_arn = module.s3.parameters_encryption_arn
 }
 
 ################################################################################
@@ -68,6 +104,7 @@ module "eks" {
   providers = {
     aws = aws
   }
+
   cluster_name           = local.cluster_name
   vpc_id                 = module.vpc.vpc_id
   private_subnets        = module.vpc.private_subnets
@@ -115,7 +152,7 @@ module "nullplatform_configuration" {
     nullplatform = nullplatform
   }
   api_key                               = var.api_key
-  account                               = var.account
+  nrn                                   = var.nrn
   region                                = var.region
   cluster_name                          = local.cluster_name
   application_manager_role              = module.iam_roles_policies.nullplatform_application_role_arn
@@ -124,8 +161,24 @@ module "nullplatform_configuration" {
   build_workflow_user_access_key_id     = module.iam_roles_policies.nullplatform_build_workflow_user_access_key_id
   build_workflow_user_secret_access_key = module.iam_roles_policies.nullplatform_build_workflow_user_secret_access_key
 
-      domain_name           = var.domain_name
-      hosted_zone_id        = module.route53.private_zone_id
-      hosted_public_zone_id = module.route53.public_zone_id
-   
+  domain_name           = var.domain_name
+  hosted_zone_id        = module.route53.private_zone_id
+  hosted_public_zone_id = module.route53.public_zone_id
+
+  ec2_instance_profile             = module.iam_roles_policies.nullplatform_instance_profile_arn
+  ec2_parameters_bucket            = module.s3.parameters_bucket
+  ec2_parameters_encryption_secret = module.s3.parameters_encryption
+
+  vpc_id                             = module.vpc.vpc_id
+  subnet_ids                         = module.vpc.private_subnets
+  security_group_ids                 = module.alb.security_group_ids
+  private_load_balancer_arn          = module.alb.private_load_balancer_arn
+  private_load_balancer_listener_arn = module.alb.private_load_balancer_listener_arn
+  public_load_balancer_arn           = module.alb.public_load_balancer_arn
+  public_load_balancer_listener_arn  = module.alb.public_load_balancer_listener_arn
+
+
+  lambda_assets_bucket     = module.s3.assets_bucket
+  Lambda_function_role_arn = module.iam_roles_policies.nullplatform_role_arn
+
 }
