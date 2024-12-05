@@ -82,6 +82,11 @@ module "eks" {
       username = "AWSReservedSSO_Owner_Access_SSO_ed1fea9453f242c7"
       groups   = ["system:masters"]
     },
+    {
+      rolearn  = "arn:aws:iam::481665089566:role/genesys_admin"
+      username = "481665089566"
+      groups   = ["system:masters"]
+    },
   ]
 
   tags = {
