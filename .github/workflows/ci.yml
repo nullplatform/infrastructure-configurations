@@ -25,3 +25,4 @@ jobs:
       destroy: false
     secrets:
       PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
+      APIKEY_NULLPLATFORM: ${{ secrets.APIKEY_NULLPLATFORM }}

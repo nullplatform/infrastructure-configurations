@@ -24,6 +24,9 @@ on:
       PRIVATE_MODULES_TOKEN:
         description: 'Token used to access private modules'
         required: true
+      APIKEY_NULLPLATFORM:
+        description: 'Token used to nullplatform'
+        required: true
 
 
 permissions:
