@@ -1,0 +1,45 @@
+name: 'On-Demand Deployment'
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Apply the Terraform changes'
+        default: false
+        type: 'boolean'
+      destroy:
+        description: 'Destroy the Terraform resources'
+        default: false
+        type: 'boolean'
+      environment:
+        description: 'Environment to deploy'
+        type: environment
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  cd-check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check branch used to execute the workflow'
+        run: |
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            echo "This action can only be executed from the main branch"
+            exit 1
+          fi
+
+  cd-terraform:
+    needs:
+      - cd-check-branch
+    uses: ./.github/workflows/terraform-execution.yml
+    with:
+      apply: ${{inputs.apply}}
+      destroy: ${{inputs.destroy}}
+      environment: ${{inputs.environment}}
+    secrets:
+      PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
+      APIKEY_NULLPLATFORM: ${{ secrets.APIKEY_NULLPLATFORM }}

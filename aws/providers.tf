@@ -3,7 +3,7 @@ provider "nullplatform" {
 }
 
 provider "aws" {
-  region  = var.region
+  assume_role {}
 }
 
 provider "kubernetes" {

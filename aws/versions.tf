@@ -12,5 +12,13 @@ terraform {
         nullplatform = {
             source = "nullplatform/nullplatform"
         }
+        random = {
+            source  = "hashicorp/random"
+            version = ">= 3.6.2, < 4.0.0"
+        }
+    }
+
+    backend "s3" {
+        encrypt = true
     }
 }
