@@ -23,6 +23,11 @@ variable "account" {
   default     = "<<MY_ACCOUNT>>"
 }
 
+variable "nrn" {
+  type        = string
+  description = "The NRN to register providers"
+}
+
 variable "namespace" {
   type        = string
   description = "The default namespace to use for nullplatform applications"
