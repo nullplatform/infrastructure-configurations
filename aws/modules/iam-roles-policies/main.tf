@@ -34,7 +34,7 @@ resource "aws_iam_policy" "nullplatform_ecr_manager_policy" {
   })
   tags = {
     organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 
@@ -46,7 +46,7 @@ resource "aws_iam_policy" "nullplatform_ecr_write_policy" {
     Version = "2012-10-17",
     Statement = [
       {
-        Sid = "NullplatformEcrWritePolicy",
+        Sid    = "NullplatformEcrWritePolicy",
         Effect = "Allow",
         Action = [
           "ecr:BatchCheckLayerAvailability",
@@ -62,66 +62,7 @@ resource "aws_iam_policy" "nullplatform_ecr_write_policy" {
   })
   tags = {
     organization = var.organization
-    account = var.account
-  }
-}
-
-resource "aws_iam_policy" "nullplatform_eks_manager_policy" {
-  provider    = aws
-  name        = "nullplatform-eks-manager-policy"
-  description = "Policy for managing EKS"
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "eks:DescribeCluster",
-          "elasticloadbalancing:DescribeLoadBalancers"
-        ],
-        Resource = "*"
-      },
-      {
-        "Effect": "Allow",
-        "Action": [
-            "logs:CreateLogGroup",
-            "logs:CreateLogStream",
-            "logs:PutLogEvents",
-            "logs:DescribeLogStreams"
-        ],
-        "Resource": [
-            "arn:aws:logs:*:*:*"
-        ]
-      }
-    ]
-  })
-  tags = {
-    organization = var.organization
-    account = var.account
-  }
-}
-
-resource "aws_iam_policy" "nullplatform_route53_manager_policy" {
-  provider    = aws
-  name        = "nullplatform-route53-manager-policy"
-  description = "Policy for managing Route53"
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "route53:ChangeResourceRecordSets",
-          "route53:GetHostedZone",
-          "route53:ListResourceRecordSets"
-        ],
-        Resource = "arn:aws:route53:::hostedzone/*"
-      }
-    ]
-  })
-  tags = {
-    organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 
@@ -152,13 +93,32 @@ resource "aws_iam_policy" "nullplatform_metrics_api_policy" {
   })
   tags = {
     organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 
+resource "aws_iam_policy" "nullplatform-assets-write" {
+  name = "nullplatform-assets-write"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:PutObjectVersionAcl",
+          "s3:GetObject"
+        ]
+        Effect   = "Allow"
+        Resource = "${var.assets_bucket_arn}/*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role" "nullplatform_application_role" {
-  provider           = aws
-  name               = "nullplatform-application-role"
+  provider = aws
+  name     = "nullplatform-application-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -177,42 +137,13 @@ resource "aws_iam_role" "nullplatform_application_role" {
   }
   tags = {
     organization = var.organization
-    account = var.account
-  }
-}
-
-resource "aws_iam_role" "nullplatform_scope_workflow_role" {
-  provider           = aws
-  name               = "nullplatform-scope-workflow-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          AWS = var.scope_manager_assume_role
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-  inline_policy {
-    name   = "route53-manager-policy"
-    policy = aws_iam_policy.nullplatform_route53_manager_policy.policy
-  }
-  inline_policy {
-    name   = "eks-manager-policy"
-    policy = aws_iam_policy.nullplatform_eks_manager_policy.policy
-  }
-  tags = {
-    organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 
 resource "aws_iam_role" "nullplatform_telemetry_manager_role" {
-  provider           = aws
-  name               = "nullplatform-telemetry-manager-role"
+  provider = aws
+  name     = "nullplatform-telemetry-manager-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -235,7 +166,7 @@ resource "aws_iam_role" "nullplatform_telemetry_manager_role" {
   }
   tags = {
     organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 
@@ -244,7 +175,7 @@ resource "aws_iam_user" "nullplatform_build_workflow_user" {
   name     = "nullplatform-build-workflow-user"
   tags = {
     organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 
@@ -253,6 +184,13 @@ resource "aws_iam_user_policy" "nullplatform_build_workflow_user_policy" {
   name     = "ecr-write-policy"
   user     = aws_iam_user.nullplatform_build_workflow_user.name
   policy   = aws_iam_policy.nullplatform_ecr_write_policy.policy
+}
+
+resource "aws_iam_user_policy" "nullplatform_build_workflow_user_policy_s3" {
+  provider = aws
+  name     = "s3-write-policy"
+  user     = aws_iam_user.nullplatform_build_workflow_user.name
+  policy   = aws_iam_policy.nullplatform-assets-write.policy
 }
 
 resource "aws_iam_access_key" "nullplatform_build_workflow_user_key" {

@@ -4,7 +4,7 @@ data "aws_caller_identity" "current" {
 
 resource "nullplatform_provider_config" "aws" {
   provider   = nullplatform
-  account    = var.account
+  nrn        = var.nrn
   type       = "aws-configuration"
   dimensions = {}
   attributes = jsonencode({
@@ -26,7 +26,7 @@ resource "nullplatform_provider_config" "aws" {
 
 resource "nullplatform_provider_config" "eks" {
   provider   = nullplatform
-  account    = var.account
+  nrn        = var.nrn
   type       = "eks-configuration"
   dimensions = {}
   attributes = jsonencode({
@@ -44,7 +44,7 @@ resource "nullplatform_provider_config" "eks" {
 
 resource "nullplatform_provider_config" "ecr" {
   provider   = nullplatform
-  account    = var.account
+  nrn        = var.nrn
   type       = "ecr"
   dimensions = {}
   attributes = jsonencode({

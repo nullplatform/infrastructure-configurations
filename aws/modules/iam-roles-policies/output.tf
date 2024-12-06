@@ -38,6 +38,11 @@ output "nullplatform_metrics_api_policy_arn" {
   value       = aws_iam_policy.nullplatform_metrics_api_policy.arn
 }
 
+output "nullplatform_instance_profile_arn" {
+  description = "The ARN of the instance arn"
+  value       = aws_iam_instance_profile.null-instance-profile.arn
+}
+
 output "nullplatform_build_workflow_user_name" {
   description = "The name of the null-build-workflow-user"
   value       = aws_iam_user.nullplatform_build_workflow_user.name
@@ -53,4 +58,9 @@ output "nullplatform_build_workflow_user_secret_access_key" {
   description = "The secret access key for the null-build-workflow-user"
   value       = aws_iam_access_key.nullplatform_build_workflow_user_key.secret
   sensitive   = true
+}
+
+output "nullplatform_role_arn" {
+  description = "The IAM Role arn used for Lambda and EC2"
+  value       = aws_iam_role.null-instance-role.arn
 }
