@@ -9,3 +9,4 @@ vpc = {
     public_subnets = ["10.82.125.0/25", "10.82.125.128/25"]
     azs = ["us-east-1a", "us-east-1b"]
 }
+nrn="organization=1304166607:account=996081796"
