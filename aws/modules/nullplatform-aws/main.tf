@@ -25,10 +25,12 @@ resource "nullplatform_provider_config" "aws" {
 }
 
 resource "nullplatform_provider_config" "eks" {
-  provider   = nullplatform
-  nrn        = var.nrn
-  type       = "eks-configuration"
-  dimensions = {}
+  provider = nullplatform
+  nrn      = var.nrn
+  type     = "eks-configuration"
+  dimensions = {
+    "env" : "development"
+  }
   attributes = jsonencode({
     cluster = {
       id        = var.cluster_name,
