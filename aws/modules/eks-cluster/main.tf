@@ -46,7 +46,7 @@ module "eks" {
       min_size     = 1
       max_size     = 10
       desired_size = 2
-	  }
+    }
   }
 
   manage_aws_auth_configmap = true
@@ -59,14 +59,14 @@ module "eks" {
     },
     {
       rolearn  = var.telemetry_manager_role
-      username = "telemety_manager_role"
+      username = "telemetry_manager_role"
       groups   = ["eks:k8s-metrics", "np:pod-reader", "system:masters"]
     }
   ]
 
   tags = {
     organization = var.organization
-    account = var.account
+    account      = var.account
   }
 }
 

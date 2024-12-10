@@ -16,6 +16,11 @@ variable "api_key" {
   description = "nullplatform API key"
 }
 
+variable "suffix" {
+  type        = string
+  description = "A suffix for the bucket name"
+}
+
 ################################################################################
 # Variables from other Modules
 ################################################################################

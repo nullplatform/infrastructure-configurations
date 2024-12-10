@@ -23,15 +23,15 @@ variable "account" {
   description = "nullplatform default account slug"
 }
 
-variable "assets_bucket_arn" {
-  type        = string
+variable "assets_bucket_arns" {
+  type        = list(string)
   description = "Assets bucket arn"
 }
-variable "parameters_bucket_arn" {
-  type        = string
+variable "parameters_bucket_arns" {
+  type        = list(string)
   description = "Parameters bucket arn"
 }
-variable "parameters_encryption_arn" {
-  type        = string
+variable "parameters_encryption_arns" {
+  type        = list(string)
   description = "Parameters secret arn"
 }

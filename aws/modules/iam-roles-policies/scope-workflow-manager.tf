@@ -313,7 +313,8 @@ resource "aws_iam_policy" "nullplatform_lambda_manager_policy" {
         Action = [
           "s3:GetObject"
         ],
-        Resource = "${var.assets_bucket_arn}/*"
+        Resource = [for bucket in var.assets_bucket_arns : "${bucket}/*"]
+
       },
       {
         Effect = "Allow",
@@ -405,7 +406,7 @@ resource "aws_iam_policy" "nullplatform_params_manager_policy" {
           "s3:PutObjectVersionAcl"
         ]
         Effect   = "Allow"
-        Resource = "${var.parameters_bucket_arn}/*"
+        Resource = [for bucket in var.parameters_bucket_arns : "${bucket}/*"]
       },
       {
         Action = [
@@ -415,14 +416,14 @@ resource "aws_iam_policy" "nullplatform_params_manager_policy" {
           "s3:GetObject"
         ]
         Effect   = "Allow"
-        Resource = "${var.assets_bucket_arn}/*"
+        Resource = [for bucket in var.assets_bucket_arns : "${bucket}/*"]
       }
       , {
         Action = [
           "secretsmanager:GetSecretValue"
         ]
         Effect   = "Allow"
-        Resource = "${var.parameters_encryption_arn}"
+        Resource = [for param in var.parameters_encryption_arns : param]
       }
     ]
   })
