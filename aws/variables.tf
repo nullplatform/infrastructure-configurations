@@ -43,7 +43,17 @@ variable "region" {
   description = "The AWS region to use"
 }
 
-variable "vpc" {
+variable "vpc_stg" {
+  description = "A VPC with public and private subnets"
+  default = {
+    cidr            = "172.30.0.0/16"
+    private_subnets = ["172.30.0.0/20", "172.30.16.0/20", "172.30.32.0/20"]
+    public_subnets  = ["172.30.48.0/20", "172.30.64.0/20", "172.30.80.0/20"]
+    azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  }
+}
+
+variable "vpc_production" {
   description = "A VPC with public and private subnets"
   default = {
     cidr            = "172.30.0.0/16"

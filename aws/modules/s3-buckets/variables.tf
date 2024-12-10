@@ -12,3 +12,8 @@ variable "namespace" {
   type        = string
   description = "nullplatform namespace slug"
 }
+
+variable "suffix" {
+  type        = string
+  description = "A suffix for the bucket name"
+}

@@ -1,13 +1,9 @@
 data "aws_region" "current" {
-  provider = aws
 }
 
 module "lb_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  providers = {
-    aws = aws
-  }
-  role_name                              = "${var.cluster_name}_eks_lb"
+  source                                 = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  role_name                              = "${var.cluster_name}_eks_lb_${var.suffix}"
   attach_load_balancer_controller_policy = true
   oidc_providers = {
     main = {
@@ -18,7 +14,6 @@ module "lb_role" {
 }
 
 resource "kubernetes_service_account" "service-account" {
-  provider = kubernetes
   metadata {
     name      = "aws-load-balancer-controller"
     namespace = "kube-system"
@@ -34,7 +29,6 @@ resource "kubernetes_service_account" "service-account" {
 }
 
 resource "helm_release" "lb" {
-  provider   = helm
   name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"

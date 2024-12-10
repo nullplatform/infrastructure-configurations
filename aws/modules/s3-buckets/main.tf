@@ -1,6 +1,6 @@
 locals {
-  parameters_bucket = "null-parameters-${var.organization}-${var.account}-${var.namespace}"
-  assets_bucket     = "null-assets-${var.organization}-${var.account}-${var.namespace}"
+  parameters_bucket = "null-parameters-${var.organization}-${var.account}-${var.namespace}-${var.suffix}"
+  assets_bucket     = "null-assets-${var.organization}-${var.account}-${var.namespace}-${var.suffix}"
 }
 
 resource "aws_s3_bucket" "parameters-bucket" {

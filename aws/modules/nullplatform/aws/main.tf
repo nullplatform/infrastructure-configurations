@@ -6,7 +6,9 @@ resource "nullplatform_provider_config" "aws" {
   provider   = nullplatform
   nrn        = var.nrn
   type       = "aws-configuration"
-  dimensions = {}
+  dimensions = {
+    "env" : var.suffix
+  }
   attributes = jsonencode({
     iam = {
       scope_workflow_role = var.scope_manager_role
@@ -29,7 +31,7 @@ resource "nullplatform_provider_config" "eks" {
   nrn      = var.nrn
   type     = "eks-configuration"
   dimensions = {
-    "env" : "development"
+    "env" : var.suffix
   }
   attributes = jsonencode({
     cluster = {
@@ -48,7 +50,9 @@ resource "nullplatform_provider_config" "ecr" {
   provider   = nullplatform
   nrn        = var.nrn
   type       = "ecr"
-  dimensions = {}
+  dimensions = {
+    "env" : var.suffix
+  }
   attributes = jsonencode({
     "ci" : {
       "region" : var.region,

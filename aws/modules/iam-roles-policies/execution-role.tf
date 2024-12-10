@@ -123,13 +123,13 @@ resource "aws_iam_policy" "null-params-read" {
           "s3:GetObjectVersion"
         ]
         Effect   = "Allow"
-        Resource = "${var.parameters_bucket_arn}/*"
+        Resource = [for bucket in var.parameters_bucket_arns : "${bucket}/*"]
         }, {
         Action = [
           "secretsmanager:GetSecretValue"
         ]
         Effect   = "Allow"
-        Resource = var.parameters_encryption_arn
+        Resource = [for param in var.parameters_encryption_arns : param]
       },
     ]
   })

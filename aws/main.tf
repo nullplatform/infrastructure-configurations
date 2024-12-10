@@ -3,17 +3,89 @@ locals {
 }
 
 ################################################################################
-# VPC Module
+# Meta Module
 ################################################################################
 
-module "vpc" {
-  source = "./modules/vpc"
+module "meta_stg" {
+  source = "./modules/meta"
   providers = {
-    aws = aws
+    aws = aws.stg
   }
+
+  domain_name  = var.domain_name
+  api_key      = var.api_key
   organization = var.organization
   account      = var.account
-  vpc          = var.vpc
+  nrn          = var.nrn
+  namespace    = var.namespace
+  vpc          = var.vpc_stg
+  region       = "us-east-1"
+  suffix       = "stg"
+
+  nullplatform_role_arn                              = module.iam_roles_policies.nullplatform_role_arn
+  nullplatform_scope_workflow_role_arn               = module.iam_roles_policies.nullplatform_scope_workflow_role_arn
+  nullplatform_telemetry_manager_role_arn            = module.iam_roles_policies.nullplatform_telemetry_manager_role_arn
+  nullplatform_instance_profile_arn                  = module.iam_roles_policies.nullplatform_instance_profile_arn
+  nullplatform_build_workflow_user_secret_access_key = module.iam_roles_policies.nullplatform_build_workflow_user_secret_access_key
+  nullplatform_build_workflow_user_access_key_id     = module.iam_roles_policies.nullplatform_build_workflow_user_access_key_id
+  nullplatform_application_role_arn                  = module.iam_roles_policies.nullplatform_application_role_arn
+  nullplatform_dimensions                            = module.dimensions.ids
+
+  hosted_zone_id        = module.route53.private_zone_id
+  hosted_public_zone_id = module.route53.public_zone_id
+
+  parameters_encryption = module.secret.parameters_encryption
+
+}
+
+module "meta_production" {
+  source = "./modules/meta"
+  providers = {
+    aws = aws.production
+  }
+
+  domain_name  = var.domain_name
+  api_key      = var.api_key
+  organization = var.organization
+  account      = var.account
+  nrn          = var.nrn
+  namespace    = var.namespace
+  vpc          = var.vpc_production
+  region       = "us-east-2"
+  suffix       = "production"
+
+  nullplatform_role_arn                              = module.iam_roles_policies.nullplatform_role_arn
+  nullplatform_scope_workflow_role_arn               = module.iam_roles_policies.nullplatform_scope_workflow_role_arn
+  nullplatform_telemetry_manager_role_arn            = module.iam_roles_policies.nullplatform_telemetry_manager_role_arn
+  nullplatform_instance_profile_arn                  = module.iam_roles_policies.nullplatform_instance_profile_arn
+  nullplatform_build_workflow_user_secret_access_key = module.iam_roles_policies.nullplatform_build_workflow_user_secret_access_key
+  nullplatform_build_workflow_user_access_key_id     = module.iam_roles_policies.nullplatform_build_workflow_user_access_key_id
+  nullplatform_application_role_arn                  = module.iam_roles_policies.nullplatform_application_role_arn
+  nullplatform_dimensions                            = module.dimensions.ids
+
+  hosted_zone_id        = module.route53.private_zone_id
+  hosted_public_zone_id = module.route53.public_zone_id
+
+  parameters_encryption = module.secret.parameters_encryption
+
+}
+
+################################################################################
+# Nullplatform Dimensions
+################################################################################
+
+module "dimensions" {
+  source = "./modules/nullplatform/dimensions"
+
+  nrn = var.nrn
+}
+
+################################################################################
+# Secret Module
+################################################################################
+
+module "secret" {
+  source = "./modules/secret"
 }
 
 ################################################################################
@@ -23,59 +95,21 @@ module "vpc" {
 module "route53" {
   source = "./modules/route53"
   providers = {
-    aws = aws
+    aws = aws.stg
   }
   organization = var.organization
   account      = var.account
   domain_name  = var.domain_name
-  vpc_id       = module.vpc.vpc_id
-}
-
-################################################################################
-# ACM Module
-################################################################################
-
-module "acm" {
-  source = "./modules/acm"
-  providers = {
-    aws = aws
+  vpcs = {
+    "vpc_stg" = {
+      vpc_id     = module.meta_stg.vpc_id
+      vpc_region = "us-east-1"
+    }
+    "vpc_production" = {
+      vpc_id     = module.meta_production.vpc_id
+      vpc_region = "us-east-2"
+    }
   }
-  domain_name  = var.domain_name
-  zone_id      = module.route53.public_zone_id
-  organization = var.organization
-  account      = var.account
-}
-
-################################################################################
-# LB and SGs for EC2
-################################################################################
-
-module "alb" {
-  source = "./modules/ec2-alb"
-  providers = {
-    aws = aws
-  }
-
-  certificate_arn    = module.acm.acm_certificate_arn
-  public_subnet_ids  = module.vpc.public_subnets
-  private_subnet_ids = module.vpc.private_subnets
-  vpc_id             = module.vpc.vpc_id
-  vpc_cidr           = var.vpc["cidr"]
-}
-
-################################################################################
-# Buckets and Secret for objects
-################################################################################
-
-module "s3" {
-  source = "./modules/s3-buckets"
-  providers = {
-    aws = aws
-  }
-
-  organization = var.organization
-  account      = var.account
-  namespace    = var.namespace
 }
 
 ################################################################################
@@ -85,100 +119,12 @@ module "s3" {
 module "iam_roles_policies" {
   source = "./modules/iam-roles-policies"
   providers = {
-    aws = aws
+    aws = aws.stg
   }
 
-  organization              = var.organization
-  account                   = var.account
-  assets_bucket_arn         = module.s3.assets_bucket_arn
-  parameters_bucket_arn     = module.s3.parameters_bucket_arn
-  parameters_encryption_arn = module.s3.parameters_encryption_arn
-}
-
-################################################################################
-# EKS Cluster Module
-################################################################################
-
-module "eks" {
-  source = "./modules/eks-cluster"
-  providers = {
-    aws = aws
-  }
-
-  cluster_name           = local.cluster_name
-  vpc_id                 = module.vpc.vpc_id
-  private_subnets        = module.vpc.private_subnets
-  scope_manager_role     = module.iam_roles_policies.nullplatform_scope_workflow_role_arn
-  telemetry_manager_role = module.iam_roles_policies.nullplatform_telemetry_manager_role_arn
-  organization           = var.organization
-  account                = var.account
-}
-
-################################################################################
-# EKS Cluster Configuration Module
-################################################################################
-
-module "eks_config" {
-  source = "./modules/eks-config"
-  providers = {
-    aws = aws
-  }
-}
-
-################################################################################
-# AWS ALB Controller
-################################################################################
-
-module "aws_alb_controller" {
-  source = "./modules/aws-alb-controller"
-  providers = {
-    aws        = aws
-    helm       = helm
-    kubernetes = kubernetes
-  }
-  cluster_name      = local.cluster_name
-  vpc_id            = module.vpc.vpc_id
-  oidc_provider_arn = module.eks.oidc_provider_arn
-}
-
-################################################################################
-# Nullplatform AWS Provider Configuration
-################################################################################
-
-module "nullplatform_configuration" {
-  source = "./modules/nullplatform-aws"
-  providers = {
-    aws          = aws
-    nullplatform = nullplatform
-  }
-  api_key                               = var.api_key
-  nrn                                   = var.nrn
-  region                                = var.region
-  cluster_name                          = local.cluster_name
-  application_manager_role              = module.iam_roles_policies.nullplatform_application_role_arn
-  scope_manager_role                    = module.iam_roles_policies.nullplatform_scope_workflow_role_arn
-  telemetry_manager_role                = module.iam_roles_policies.nullplatform_telemetry_manager_role_arn
-  build_workflow_user_access_key_id     = module.iam_roles_policies.nullplatform_build_workflow_user_access_key_id
-  build_workflow_user_secret_access_key = module.iam_roles_policies.nullplatform_build_workflow_user_secret_access_key
-
-  domain_name           = var.domain_name
-  hosted_zone_id        = module.route53.private_zone_id
-  hosted_public_zone_id = module.route53.public_zone_id
-
-  ec2_instance_profile             = module.iam_roles_policies.nullplatform_instance_profile_arn
-  ec2_parameters_bucket            = module.s3.parameters_bucket
-  ec2_parameters_encryption_secret = module.s3.parameters_encryption
-
-  vpc_id                             = module.vpc.vpc_id
-  subnet_ids                         = module.vpc.private_subnets
-  security_group_ids                 = module.alb.security_group_ids
-  private_load_balancer_arn          = module.alb.private_load_balancer_arn
-  private_load_balancer_listener_arn = module.alb.private_load_balancer_listener_arn
-  public_load_balancer_arn           = module.alb.public_load_balancer_arn
-  public_load_balancer_listener_arn  = module.alb.public_load_balancer_listener_arn
-
-
-  lambda_assets_bucket     = module.s3.assets_bucket
-  Lambda_function_role_arn = module.iam_roles_policies.nullplatform_role_arn
-
+  organization               = var.organization
+  account                    = var.account
+  assets_bucket_arns         = [module.meta_stg.assets_bucket_arn, module.meta_production.assets_bucket_arn]
+  parameters_bucket_arns     = [module.meta_stg.parameters_bucket_arn, module.meta_production.parameters_bucket_arn]
+  parameters_encryption_arns = [module.secret.parameters_encryption_arn]
 }

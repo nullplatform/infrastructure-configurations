@@ -2,7 +2,9 @@ resource "nullplatform_provider_config" "ec2" {
   provider   = nullplatform
   nrn        = var.nrn
   type       = "ec2-configuration"
-  dimensions = {}
+  dimensions = {
+    "env" : var.suffix
+  }
   attributes = jsonencode({
     ami = {
       id = var.ec2_ami_id

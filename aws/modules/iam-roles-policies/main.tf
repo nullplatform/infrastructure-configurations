@@ -110,7 +110,7 @@ resource "aws_iam_policy" "nullplatform-assets-write" {
           "s3:GetObject"
         ]
         Effect   = "Allow"
-        Resource = "${var.assets_bucket_arn}/*"
+        Resource = [for bucket in var.assets_bucket_arns : "${bucket}/*"]
       }
     ]
   })
