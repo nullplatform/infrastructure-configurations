@@ -60,13 +60,8 @@ module "eks" {
     {
       rolearn  = var.telemetry_manager_role
       username = "telemety_manager_role"
-      groups   = ["eks:k8s-metrics"]
-    },
-    {
-      rolearn  = var.telemetry_manager_role
-      username = "telemetry_manager_role"
-      groups   = ["np:pod-reader"]
-    },
+      groups   = ["eks:k8s-metrics", "np:pod-reader", "system:masters"]
+    }
   ]
 
   tags = {
