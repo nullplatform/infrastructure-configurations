@@ -1,0 +1,25 @@
+name: Continous Delivery
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+  pull-requests: write
+  security-events: write
+  statuses: write
+
+
+jobs:
+  cd-terraform:
+    uses: ./.github/workflows/terraform-execution.yml
+    with:
+      apply: true
+      destroy: false
+    secrets:
+      PRIVATE_MODULES_TOKEN: ${{ secrets.GLOBAL_REPO_TOKEN }}
+      APIKEY_NULLPLATFORM: ${{ secrets.APIKEY_NULLPLATFORM }}
