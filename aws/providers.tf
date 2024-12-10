@@ -3,7 +3,7 @@ provider "nullplatform" {
 }
 
 provider "aws" {
-  assume_role {}
+
 }
 
 provider "kubernetes" {
