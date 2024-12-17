@@ -1,5 +1,5 @@
 resource "aws_lb" "null-main-balancer" {
-  name               = "null-main-balancer"
+  name               = substr("null-main-balancer-${var.suffix}", 0, 32)
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.null-main-balancer.id]
@@ -8,7 +8,7 @@ resource "aws_lb" "null-main-balancer" {
 
 
 resource "aws_lb_target_group" "default_target_group" {
-  name     = "default-tg"
+  name     = "default-${var.suffix}-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
@@ -42,7 +42,7 @@ resource "aws_lb_listener" "null-main-listener-https" {
 }
 
 resource "aws_lb" "null-main-balancer-internal" {
-  name               = "null-main-balancer-internal"
+  name               = substr("null-main-balancer-internal-${var.suffix}", 0, 32)
   internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.null-main-balancer.id]
@@ -61,7 +61,7 @@ resource "aws_lb_listener" "null-main-internal-listener-https" {
 }
 
 resource "aws_lb_target_group" "default_target_group_internal" {
-  name     = "default-internal-tg"
+  name     = "default-internal-${var.suffix}-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id

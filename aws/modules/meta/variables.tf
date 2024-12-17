@@ -98,7 +98,16 @@ variable "hosted_public_zone_id" {
   description = "The AWS public hosted zone id"
 }
 
+variable "parameters_bucket" {
+  type        = string
+  description = "The parameters bucket"
+}
+
 variable "parameters_encryption" {
   type        = string
   description = "The secret manager key to decrypt values"
+}
+
+variable "acm_certificate_arn" {
+  type = string
 }

@@ -1,5 +1,5 @@
 locals {
-  cluster_name = "${var.organization}-${var.account}-cluster"
+  cluster_name = "${var.organization}-${var.account}-${var.suffix}"
 }
 
 ################################################################################
@@ -14,21 +14,7 @@ module "vpc" {
   organization = var.organization
   account      = var.account
   vpc          = var.vpc
-}
-
-################################################################################
-# ACM Module
-################################################################################
-
-module "acm" {
-  source = "../acm"
-  providers = {
-    aws = aws
-  }
-  domain_name  = var.domain_name
-  zone_id      = var.hosted_public_zone_id
-  organization = var.organization
-  account      = var.account
+  suffix       = var.suffix
 }
 
 ################################################################################
@@ -40,26 +26,12 @@ module "alb" {
   providers = {
     aws = aws
   }
-  certificate_arn    = module.acm.acm_certificate_arn
+  certificate_arn    = var.acm_certificate_arn
   public_subnet_ids  = module.vpc.public_subnets
   private_subnet_ids = module.vpc.private_subnets
   vpc_id             = module.vpc.vpc_id
   vpc_cidr           = var.vpc["cidr"]
-}
-
-################################################################################
-# Buckets and Secret for objects
-################################################################################
-
-module "s3" {
-  source = "../s3-buckets"
-  providers = {
-    aws = aws
-  }
-  organization = var.organization
-  account      = var.account
-  namespace    = var.namespace
-  suffix       = var.suffix
+  suffix             = var.suffix
 }
 
 ################################################################################
@@ -95,7 +67,8 @@ module "eks_config" {
 module "aws_alb_controller" {
   source = "../aws-alb-controller"
   providers = {
-    aws = aws
+    aws        = aws
+    kubernetes = kubernetes
   }
   cluster_name      = local.cluster_name
   vpc_id            = module.vpc.vpc_id
@@ -128,7 +101,7 @@ module "nullplatform_configuration" {
   hosted_public_zone_id = var.hosted_public_zone_id
 
   ec2_instance_profile             = var.nullplatform_instance_profile_arn
-  ec2_parameters_bucket            = module.s3.parameters_bucket
+  ec2_parameters_bucket            = var.parameters_bucket
   ec2_parameters_encryption_secret = var.parameters_encryption
 
   vpc_id                             = module.vpc.vpc_id
@@ -139,10 +112,9 @@ module "nullplatform_configuration" {
   public_load_balancer_arn           = module.alb.public_load_balancer_arn
   public_load_balancer_listener_arn  = module.alb.public_load_balancer_listener_arn
 
-  lambda_assets_bucket     = module.s3.assets_bucket
   Lambda_function_role_arn = var.nullplatform_role_arn
 
-  suffix = var.suffix
+  suffix = "poc${var.suffix}"
 
   depends_on = [var.nullplatform_dimensions]
 }
