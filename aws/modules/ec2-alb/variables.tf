@@ -22,3 +22,9 @@ variable "private_subnet_ids" {
   type        = list(string)
   description = "List of public subnet ids to associate to the LB"
 }
+
+variable "suffix" {
+  type        = string
+  description = "A suffix for the bucket name"
+}
+

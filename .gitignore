@@ -12,6 +12,9 @@ terraform.tfstate.backup
 *.tfstate
 *.tfstate.*
 
+# Terraform backend
+backend.tf
+
 # Crash log files
 crash.log
 

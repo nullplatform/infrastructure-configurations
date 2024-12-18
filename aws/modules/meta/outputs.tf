@@ -4,13 +4,33 @@ output "vpc_id" {
   value       = module.vpc.vpc_id
 }
 
-# S3 outputs
-output "assets_bucket_arn" {
-  description = "Assets bucket arn"
-  value       = module.s3.assets_bucket_arn
+output "subnet_ids" {
+  description = "The subnet ids used for ec2 and lambda"
+  value       = module.vpc.private_subnets
 }
 
-output "parameters_bucket_arn" {
-  description = "Parameters bucket arn"
-  value       = module.s3.parameters_bucket_arn
+output "security_group_ids" {
+  description = "The sg ids used for ec2 and lambda"
+  value       = module.alb.security_group_ids
 }
+
+output "private_load_balancer_arn" {
+  description = "The private alb arn used for ec2 and lambda"
+  value       = module.alb.private_load_balancer_arn
+}
+
+output "private_load_balancer_listener_arn" {
+  description = "The private alb listener arn used for ec2 and lambda"
+  value       = module.alb.private_load_balancer_listener_arn
+}
+
+output "public_load_balancer_arn" {
+  description = "The private alb arn used for ec2 and lambda"
+  value       = module.alb.public_load_balancer_arn
+}
+
+output "public_load_balancer_listener_arn" {
+  description = "The private alb listener arn used for ec2 and lambda"
+  value       = module.alb.public_load_balancer_listener_arn
+}
+

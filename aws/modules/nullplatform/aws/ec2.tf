@@ -1,7 +1,7 @@
 resource "nullplatform_provider_config" "ec2" {
-  provider   = nullplatform
-  nrn        = var.nrn
-  type       = "ec2-configuration"
+  provider = nullplatform
+  nrn      = var.nrn
+  type     = "ec2-configuration"
   dimensions = {
     "env" : var.suffix
   }
@@ -10,8 +10,8 @@ resource "nullplatform_provider_config" "ec2" {
       id = var.ec2_ami_id
     },
     storage = {
-      parameters_bucket = var.ec2_parameters_bucket
-      # parameters_encryption_secret = var.ec2_parameters_encryption_secret
+      parameters_bucket            = var.ec2_parameters_bucket
+      parameters_encryption_secret = var.ec2_parameters_encryption_secret
     },
     security = {
       # ssh_key = var.ec2_ssh_key_name
