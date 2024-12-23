@@ -1,3 +1,3 @@
 locals {
-  environments = ["development", "stg", "uat", "production"]
+  environments = [for env in ["development", "stg", "uat", "production"] : "poc${env}"]
 }

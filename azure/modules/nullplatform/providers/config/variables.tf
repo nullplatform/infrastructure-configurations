@@ -15,6 +15,7 @@ variable "nrn" {
 variable "env" {
   type        = string
   description = "The environment dimension name that applies to all configurations"
+  default = null
 }
 
 ################################################################################

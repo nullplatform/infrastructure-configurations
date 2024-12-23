@@ -1,9 +1,7 @@
 resource "nullplatform_provider_config" "azure" {
   nrn  = var.nrn
   type = "azure-configuration"
-  dimensions = {
-    "env" : var.env
-  }
+  dimensions = var.env == null ? {} : {"env" : var.env}
   attributes = jsonencode({
     "authentication" : {
       "client_id" : var.azure_client_id
