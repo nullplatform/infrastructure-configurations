@@ -73,6 +73,18 @@ module "meta_stg" {
 # }
 
 ################################################################################
+# Github Module
+################################################################################
+
+module "code-repository" {
+  source = "../modules/nullplatform/git-server"
+  nrn    = var.nrn
+
+  github_organization                 = var.github_organization
+  github_organization_installation_id = var.github_organization_installation_id
+}
+
+################################################################################
 # ACM Module
 ################################################################################
 
@@ -92,7 +104,7 @@ module "acm" {
 ################################################################################
 
 module "dimensions" {
-  source = "./modules/nullplatform/dimensions"
+  source = "../modules/nullplatform/dimensions"
 
   nrn = var.nrn
 }

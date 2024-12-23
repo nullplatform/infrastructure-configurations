@@ -6,6 +6,7 @@ variable "azure_subscription_id" {
 variable "azure_resource_group_name" {
   type        = string
   description = "Wheter to use this rg or to create one. With null one will be created"
+  default     = null
 }
 
 variable "azure_vnet" {
@@ -50,19 +51,14 @@ variable "organization" {
   description = "The nullplatform organization slug"
 }
 
-variable "organization_id" {
-  type        = string
-  description = "The nullplatform organization id"
-}
-
 variable "account" {
   type        = string
   description = "The nullplatform default account slug"
 }
 
-variable "account_id" {
+variable "nrn" {
   type        = string
-  description = "The nullplatform default account id"
+  description = "The nullplatform nrn for this organization"
 }
 
 variable "np_api_key" {
@@ -76,4 +72,20 @@ variable "namespace" {
   nullable    = true
   default     = null
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to pass over resources"
+}
+
+variable "github_organization" {
+  type        = string
+  description = "The github organization to associate to nullplatform."
+}
+
+variable "github_organization_installation_id" {
+  type        = string
+  description = "The github installation id after installing the organization to Nullplatform github application."
+}
+
 
