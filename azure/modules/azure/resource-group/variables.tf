@@ -12,3 +12,8 @@ variable "account" {
   type        = string
   description = "nullplatform default account slug"
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to pass over resources"
+}

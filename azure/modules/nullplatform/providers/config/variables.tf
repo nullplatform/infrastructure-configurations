@@ -7,14 +7,15 @@ variable "account" {
   description = "The null platform account slug"
 }
 
-variable "account_id" {
+variable "nrn" {
   type        = string
-  description = "The null platform account id"
+  description = "The null platformnrn"
 }
 
-variable "organization_id" {
+variable "env" {
   type        = string
-  description = "The null platform organization id"
+  description = "The environment dimension name that applies to all configurations"
+  default = null
 }
 
 ################################################################################
@@ -58,24 +59,4 @@ variable "azure_tenant_id" {
 variable "azure_resource_group_id" {
   type        = string
   description = "Azure Resource group where the managed DNS hosted zone was created"
-}
-
-/*
-ACR Vars
-*/
-
-variable "acr_login_server" {
-  description = "ACR Login server name"
-  type        = string
-}
-
-variable "acr_username" {
-  description = "ACR username"
-  type        = string
-}
-
-variable "acr_password" {
-  description = "ACR password"
-  type        = string
-  sensitive   = false
 }

@@ -10,6 +10,7 @@ module "resource_group" {
   location     = var.location
   organization = var.organization
   account      = var.account
+  tags         = var.tags
 }
 
 module "vnet" {
@@ -39,7 +40,7 @@ module "aks" {
   location            = var.location
   cluster_name        = local.cluster_name
   domain_name         = local.domain_name
-  vnet_subnet_id      = coalesce(var.azure_vnet["private_subnet_id"], length(module.vnet) > 0 ? module.vnet[0].private_subnet_ids[0] : null)
+  vnet_subnet_id      = coalesce(length(keys(var.azure_vnet)) > 0 ? var.azure_vnet["private_subnet_id"] : null, length(module.vnet) > 0 ? module.vnet[0].private_subnet_ids[0] : null)
   organization        = var.organization
   account             = var.account
   registry_name       = module.acr.registry_name

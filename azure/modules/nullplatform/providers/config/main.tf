@@ -1,7 +1,7 @@
 resource "nullplatform_provider_config" "azure" {
-  nrn        = "organization=${var.organization_id}:account=${var.account_id}"
-  type       = "azure-configuration"
-  dimensions = {}
+  nrn  = var.nrn
+  type = "azure-configuration"
+  dimensions = var.env == null ? {} : {"env" : var.env}
   attributes = jsonencode({
     "authentication" : {
       "client_id" : var.azure_client_id
@@ -21,9 +21,11 @@ resource "nullplatform_provider_config" "azure" {
 }
 
 resource "nullplatform_provider_config" "aks" {
-  nrn        = "organization=${var.organization_id}:account=${var.account_id}"
-  type       = "aks-configuration"
-  dimensions = {}
+  nrn  = var.nrn
+  type = "aks-configuration"
+  dimensions = {
+    "env" : var.env
+  }
   attributes = jsonencode({
     "cluster" : {
       "id" : var.cluster_name,
@@ -35,25 +37,6 @@ resource "nullplatform_provider_config" "aks" {
       "public_name" : "gateway-public",
       "private_name" : "gateway-private"
     },
-  })
-  depends_on = [
-    nullplatform_provider_config.azure
-  ]
-}
-
-resource "nullplatform_provider_config" "acr" {
-  nrn        = "organization=${var.organization_id}:account=${var.account_id}"
-  type       = "docker-server"
-  dimensions = {}
-  attributes = jsonencode({
-    "setup" : {
-      "server" : var.acr_login_server,
-      "path" : "nullplatform",
-      "username" : var.acr_username,
-      "password" : var.acr_password,
-      "use_namespace" : false
-    },
-    "repository_provider" : "docker_server"
   })
   depends_on = [
     nullplatform_provider_config.azure

@@ -27,6 +27,11 @@ resource "helm_release" "cert-manager-config" {
   namespace        = local.namespace
 
   set {
+    name  = "azure.enabled"
+    value = true
+  }
+
+  set {
     name  = "azure.subscriptionId"
     value = var.subscription_id
   }

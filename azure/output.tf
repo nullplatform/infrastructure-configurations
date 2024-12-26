@@ -10,11 +10,11 @@ output "domain_name" {
 
 output "client_id" {
   description = "Azure credentials client id."
-  value       = coalesce(var.azure_credential["client_id"], length(module.credentials) > 0 ? module.credentials.client_id : null)
+  value       = coalesce(length(keys(var.azure_credential)) > 0 ? var.azure_credential["client_id"] : null, length(module.credentials) > 0 ? module.credentials[0].client_id : null)
 }
 
 output "client_secret" {
   description = "Azure credentials client secret (password)."
-  value       = coalesce(var.azure_credential["client_secret"], length(module.credentials) > 0 ? module.credentials.client_secret : null)
+  value       = coalesce(length(keys(var.azure_credential)) > 0 ? var.azure_credential["client_secret"] : null, length(module.credentials) > 0 ? module.credentials[0].client_secret : null)
   sensitive   = true
 }
