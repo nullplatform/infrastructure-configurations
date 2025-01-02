@@ -25,6 +25,14 @@ module "vnet" {
   ]
 }
 
+module "services" {
+  source         = "./modules/azure/services"
+  organization   = var.organization
+  account        = var.account
+  location       = var.location
+  resource_group = local.resource_group_name
+}
+
 module "dns" {
   source         = "./modules/azure/dns"
   resource_group = local.resource_group_name
