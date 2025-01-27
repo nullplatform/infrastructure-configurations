@@ -5,7 +5,7 @@ module "nullplatform" {
   env          = each.key
   account      = var.account
   nrn          = var.nrn
-  cluster_name = module.aks.cluster_name
+  cluster_name = "movistar-poc-cluster"
 
   azure_client_id         = coalesce(length(keys(var.azure_credential)) > 0 ? var.azure_credential["client_id"] : null, length(module.credentials) > 0 ? module.credentials[0].client_id : null)
   azure_client_secret     = coalesce(length(keys(var.azure_credential)) > 0 ? var.azure_credential["client_secret"] : null, length(module.credentials) > 0 ? module.credentials[0].client_secret : null)
@@ -15,17 +15,14 @@ module "nullplatform" {
 
   domain_name = local.domain_name
 
-  depends_on = [
-    module.aks
-  ]
 }
 
 module "nullplatform_registry" {
-  source   = "./modules/nullplatform/providers/config"
+  source = "./modules/nullplatform/providers/config"
 
   account      = var.account
   nrn          = var.nrn
-  cluster_name = module.aks.cluster_name
+  cluster_name = "movistar-poc-cluster"
 
   azure_client_id         = coalesce(length(keys(var.azure_credential)) > 0 ? var.azure_credential["client_id"] : null, length(module.credentials) > 0 ? module.credentials[0].client_id : null)
   azure_client_secret     = coalesce(length(keys(var.azure_credential)) > 0 ? var.azure_credential["client_secret"] : null, length(module.credentials) > 0 ? module.credentials[0].client_secret : null)
@@ -34,10 +31,6 @@ module "nullplatform_registry" {
   azure_resource_group_id = local.resource_group_name
 
   domain_name = local.domain_name
-
-  depends_on = [
-    module.aks
-  ]
 }
 
 module "assets-repository" {

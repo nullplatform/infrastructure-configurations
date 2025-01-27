@@ -1,7 +1,7 @@
 resource "nullplatform_provider_config" "azure" {
-  nrn  = var.nrn
-  type = "azure-configuration"
-  dimensions = var.env == null ? {} : {"env" : var.env}
+  nrn        = var.nrn
+  type       = "azure-configuration"
+  dimensions = var.env == null ? {} : { "environment" : var.env }
   attributes = jsonencode({
     "authentication" : {
       "client_id" : var.azure_client_id
@@ -24,7 +24,7 @@ resource "nullplatform_provider_config" "aks" {
   nrn  = var.nrn
   type = "aks-configuration"
   dimensions = {
-    "env" : var.env
+    "environment" : var.env
   }
   attributes = jsonencode({
     "cluster" : {

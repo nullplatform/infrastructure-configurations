@@ -27,8 +27,5 @@ module "aks" {
       temporary_name_for_rotation = "tmpnodepool"
     }
   }
-  tags = {
-    organization = var.organization
-    account      = var.account
-  }
+  tags = var.tags
 }

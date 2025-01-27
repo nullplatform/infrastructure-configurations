@@ -1,5 +1,5 @@
 resource "nullplatform_dimension" "environment" {
-  name  = "env"
+  name  = "environment"
   order = 1
   nrn   = var.nrn
 }

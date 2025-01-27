@@ -7,3 +7,8 @@ variable "domain_name" {
   type        = string
   description = "The domain name to use for the DNS zone"
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to pass over resources"
+}
