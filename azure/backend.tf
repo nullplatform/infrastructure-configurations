@@ -11,6 +11,7 @@ terraform {
     }
     nullplatform = {
       source = "nullplatform/nullplatform"
+      version = "0.0.49"
     }
   }
 

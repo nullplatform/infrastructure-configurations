@@ -14,14 +14,15 @@ module "aks" {
   net_profile_service_cidr          = "10.1.0.0/16"
   net_profile_dns_service_ip        = "10.1.0.10"
   temporary_name_for_rotation       = "tmpnodepool"
+  log_analytics_workspace_enabled   = false
   node_pools = {
     cluster_node_pool = {
       name                        = "nodepool"
       vm_size                     = "Standard_DS2_v2"
       enable_auto_scaling         = true
-      min_count                   = 1
+      min_count                   = 4
       max_count                   = 10
-      node_count                  = 2
+      node_count                  = 4
       availability_zones          = ["1", "2", "3"]
       vnet_subnet_id              = var.vnet_subnet_id
       temporary_name_for_rotation = "tmpnodepool"
