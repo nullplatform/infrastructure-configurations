@@ -49,3 +49,8 @@ variable "registry_name" {
   description = "The registry name created in ACR"
   type        = string
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "A map of tags to pass over resources"
+}

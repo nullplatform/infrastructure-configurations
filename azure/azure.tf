@@ -37,6 +37,7 @@ module "dns" {
   source         = "./modules/azure/dns"
   resource_group = local.resource_group_name
   domain_name    = local.domain_name
+  tags           = var.tags
   depends_on = [
     module.resource_group
   ]
@@ -53,6 +54,7 @@ module "aks" {
   account             = var.account
   registry_name       = module.acr.registry_name
   subscription_id     = var.azure_subscription_id
+  tags                = var.tags
   depends_on = [
     module.dns
   ]
