@@ -20,12 +20,13 @@ module "aks" {
       name                        = "nodepool"
       vm_size                     = "Standard_DS2_v2"
       enable_auto_scaling         = true
-      min_count                   = 4
+      min_count                   = 3
       max_count                   = 10
-      node_count                  = 4
+      node_count                  = 3
       availability_zones          = ["1", "2", "3"]
       vnet_subnet_id              = var.vnet_subnet_id
       temporary_name_for_rotation = "tmpnodepool"
+      tags                        = var.tags
     }
   }
   tags = var.tags
