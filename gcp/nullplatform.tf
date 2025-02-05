@@ -1,10 +1,10 @@
 module "dimensions" {
-  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/dimensions?ref=feature/initial_modules_gcp"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/dimensions"
   nrn    = var.nrn
 }
 
 module "gcp_nullplatform" {
-  source   = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/cloud/gcp?ref=feature/initial_modules_gcp"
+  source   = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/cloud/gcp"
   for_each = toset(module.dimensions.names)
 
   nrn                    = var.nrn
@@ -18,7 +18,7 @@ module "gcp_nullplatform" {
 }
 
 module "gke_nullplatform" {
-  source       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/container/gke?ref=feature/initial_modules_gcp"
+  source       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/container/gke"
   for_each     = toset(module.dimensions.names)
   nrn          = var.nrn
   dimension    = each.key
@@ -28,10 +28,18 @@ module "gke_nullplatform" {
 
 
 module "artifact" {
-  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/docker-server?ref=feature/initial_modules_gcp"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/docker-server"
 
   nrn          = var.nrn
   path         = "${var.project_id}/${module.repo.repository_name}"
   login_server = "${var.region}-docker.pkg.dev"
   password     = base64encode(module.gcp_cloud_provider_sa.keys["gcp-cloud"])
+}
+
+module "github" {
+  source                       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/github"
+  count                        = var.github_enabled ? 1 : 0
+  nrn                          = var.nrn
+  organization                 = var.github_organization
+  organization_installation_id = var.github_installation_id
 }

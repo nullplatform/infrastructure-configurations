@@ -8,7 +8,7 @@
     <br>
 </h2>
 
-# Setting up AKS with OpenTofu, Helm and Istio
+# Setting up GKE with OpenTofu, Helm and Istio
 
 ### Prerequisite
 

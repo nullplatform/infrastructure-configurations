@@ -31,24 +31,25 @@ module "gcp_cloud_provider_domain" {
 }
 
 module "gke" {
-  source       = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/gke?ref=feature/initial_modules_gcp"
-  project_id   = var.project_id
-  region       = var.region
-  cluster_name = var.cluster_name
-  environment  = "main"
-  network_id   = module.vpc.vpc_id
-  subnet_id    = module.vpc.subnets[0] // Module accepts only one subnet
+  source             = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/gke"
+  project_id         = var.project_id
+  region             = var.region
+  cluster_name       = var.cluster_name
+  environment        = "main"
+  network_id         = module.vpc.vpc_id
+  subnet_id          = module.vpc.subnets[0] // Module accepts only one subnet
+  initial_node_count = 1
 }
 
 module "repo" {
-  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/registry?ref=feature/initial_modules_gcp"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/registry"
 
   region     = var.region
   project_id = var.project_id
 }
 
 module "vpc" {
-  source          = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/vpc?ref=feature/initial_modules_gcp"
+  source          = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/vpc"
   name            = var.project_id
   project_id      = var.project_id
   region          = var.region
@@ -58,14 +59,14 @@ module "vpc" {
 }
 
 module "dns" {
-  source              = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/dns?ref=feature/initial_modules_gcp"
+  source              = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/dns"
   private_domain_name = "private.${var.domain_name}"
   public_domain_name  = var.domain_name
   network_id          = module.vpc.vpc_id
 }
 
 module "bucket" {
-  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/bucket?ref=feature/initial_modules_gcp"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/gcp/bucket"
   region = var.region
   name   = var.project_id
 }
