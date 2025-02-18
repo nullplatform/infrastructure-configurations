@@ -21,7 +21,7 @@ module "nullplatform" {
 }
 
 module "nullplatform_registry" {
-  source   = "./modules/nullplatform/providers/config"
+  source = "./modules/nullplatform/providers/config"
 
   account      = var.account
   nrn          = var.nrn
@@ -41,25 +41,25 @@ module "nullplatform_registry" {
 }
 
 module "assets-repository" {
-  source = "../modules/nullplatform/docker-server"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/asset/docker-server"
   nrn    = var.nrn
 
   login_server = module.acr.login_server
   username     = module.acr.token_name
   password     = module.acr.token_password
+  path         = "nullplatform"
 }
 
 module "code-repository" {
-  source = "../modules/nullplatform/github"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/code/github"
   nrn    = var.nrn
 
-  github_organization                 = var.github_organization
-  github_organization_installation_id = var.github_organization_installation_id
+  organization                 = var.github_organization
+  organization_installation_id = var.github_organization_installation_id
 }
 
 module "dimensions" {
-  source = "../modules/nullplatform/dimensions"
-
-  nrn = var.nrn
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/dimensions"
+  nrn    = var.nrn
 }
 

@@ -4,11 +4,11 @@ module "dimensions" {
 }
 
 module "gcp_nullplatform" {
-  source   = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/cloud/gcp"
+  source   = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/cloud/gcp"
   for_each = toset(module.dimensions.names)
 
   nrn                    = var.nrn
-  dimension              = each.key
+  environment            = each.key
   project_id             = var.project_id
   domain_name            = var.domain_name
   public_dns_zone_name   = module.dns.public_domain_name
@@ -18,17 +18,17 @@ module "gcp_nullplatform" {
 }
 
 module "gke_nullplatform" {
-  source       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/container/gke"
+  source       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/container/gke"
   for_each     = toset(module.dimensions.names)
   nrn          = var.nrn
-  dimension    = each.key
+  environment  = each.key
   cluster_name = module.gke.name
   location     = var.region
 }
 
 
 module "artifact" {
-  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/docker-server"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/asset/docker-server"
 
   nrn          = var.nrn
   path         = "${var.project_id}/${module.repo.repository_name}"
@@ -37,7 +37,7 @@ module "artifact" {
 }
 
 module "github" {
-  source                       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/github"
+  source                       = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/code/github"
   count                        = var.github_enabled ? 1 : 0
   nrn                          = var.nrn
   organization                 = var.github_organization
