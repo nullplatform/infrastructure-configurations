@@ -31,7 +31,7 @@ module "meta_stg" {
   hosted_public_zone_id = module.route53.public_zone_id
 
   parameters_encryption = module.secret.parameters_encryption
-  parameters_bucket     = module.s3.parameters_bucket
+  parameters_bucket     = module.bucket_parameters.bucket_id
 
   acm_certificate_arn = module.acm.acm_certificate_arn
 
@@ -77,11 +77,11 @@ module "meta_stg" {
 ################################################################################
 
 module "code-repository" {
-  source = "../modules/nullplatform/git-server"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/code/github"
   nrn    = var.nrn
 
-  github_organization                 = var.github_organization
-  github_organization_installation_id = var.github_organization_installation_id
+  organization                 = var.github_organization
+  organization_installation_id = var.github_organization_installation_id
 }
 
 ################################################################################
@@ -89,7 +89,7 @@ module "code-repository" {
 ################################################################################
 
 module "acm" {
-  source = "./modules/acm"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/acm"
   providers = {
     aws = aws
   }
@@ -104,22 +104,10 @@ module "acm" {
 ################################################################################
 
 module "dimensions" {
-  source = "../modules/nullplatform/dimensions"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/dimensions"
 
   nrn = var.nrn
 }
-
-################################################################################
-# Nullplatform Approvals
-################################################################################
-
-module "approvals" {
-  source = "./modules/nullplatform/approvals"
-
-  nrn     = var.nrn
-  api_key = var.api_key
-}
-
 
 ################################################################################
 # Nullplatform Lambda
@@ -134,7 +122,7 @@ module "null_lambda_dev" {
   region      = "us-east-1"
   suffix      = "pocdevelopment"
 
-  Lambda_function_role_arn = module.iam_roles_policies.nullplatform_role_arn
+  lambda_function_role_arn = module.iam_roles_policies.nullplatform_role_arn
 
   scope_manager_role       = module.iam_roles_policies.nullplatform_scope_workflow_role_arn
   application_manager_role = module.iam_roles_policies.nullplatform_application_role_arn
@@ -156,15 +144,20 @@ module "null_lambda_dev" {
 # Buckets and for objects
 ################################################################################
 
-module "s3" {
-  source = "./modules/s3-buckets"
+module "bucket_parameters" {
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/bucket"
   providers = {
     aws = aws
   }
-  organization = var.organization
-  account      = var.account
-  namespace    = var.namespace
-  suffix       = "central"
+  name = "nullplatform-${var.organization}-${var.account}-parameters"
+}
+
+module "bucket_assets" {
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/bucket"
+  providers = {
+    aws = aws
+  }
+  name = "nullplatform-${var.organization}-${var.account}-assets"
 }
 
 module "assets" {
@@ -178,7 +171,7 @@ module "assets" {
   build_workflow_user_access_key_id     = module.iam_roles_policies.nullplatform_build_workflow_user_access_key_id
   build_workflow_user_secret_access_key = module.iam_roles_policies.nullplatform_build_workflow_user_secret_access_key
   scope_manager_role                    = module.iam_roles_policies.nullplatform_scope_workflow_role_arn
-  lambda_assets_bucket                  = module.s3.assets_bucket
+  lambda_assets_bucket                  = module.bucket_assets.bucket_id
 
   domain_name           = var.domain_name
   hosted_public_zone_id = module.route53.public_zone_id
@@ -190,14 +183,11 @@ module "assets" {
 ################################################################################
 
 module "secret" {
-  source = "./modules/secret"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/secret"
   providers = {
     aws = aws
   }
-  organization = var.organization
-  account      = var.account
-  namespace    = var.namespace
-  suffix       = "central"
+  name = "nullplatform-${var.organization}-${var.account}"
 }
 
 ################################################################################
@@ -205,13 +195,11 @@ module "secret" {
 ################################################################################
 
 module "route53" {
-  source = "./modules/route53"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/route53"
   providers = {
     aws = aws.stg
   }
-  organization = var.organization
-  account      = var.account
-  domain_name  = var.domain_name
+  domain_name = var.domain_name
   vpcs = {
     "vpc_stg" = {
       vpc_id     = module.meta_stg.vpc_id
@@ -229,14 +217,12 @@ module "route53" {
 ################################################################################
 
 module "iam_roles_policies" {
-  source = "./modules/iam-roles-policies"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/iam/roles/nullplatform"
   providers = {
     aws = aws.stg
   }
 
-  organization               = var.organization
-  account                    = var.account
-  assets_bucket_arns         = [module.s3.assets_bucket_arn]
-  parameters_bucket_arns     = [module.s3.parameters_bucket_arn]
+  assets_bucket_arns         = [module.bucket_assets.bucket_arn]
+  parameters_bucket_arns     = [module.bucket_parameters.bucket_arn]
   parameters_encryption_arns = [module.secret.parameters_encryption_arn]
 }

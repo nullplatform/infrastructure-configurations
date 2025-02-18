@@ -7,14 +7,12 @@ locals {
 ################################################################################
 
 module "vpc" {
-  source = "../vpc"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/vpc"
   providers = {
     aws = aws
   }
-  organization = var.organization
-  account      = var.account
-  vpc          = var.vpc
-  suffix       = var.suffix
+  vpc    = var.vpc
+  suffix = var.suffix
 }
 
 ################################################################################
@@ -22,7 +20,7 @@ module "vpc" {
 ################################################################################
 
 module "alb" {
-  source = "../ec2-alb"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/alb"
   providers = {
     aws = aws
   }
@@ -39,7 +37,7 @@ module "alb" {
 ################################################################################
 
 module "eks" {
-  source = "../eks-cluster"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/aws/eks"
   providers = {
     aws = aws
   }
@@ -48,8 +46,6 @@ module "eks" {
   private_subnets        = module.vpc.private_subnets
   scope_manager_role     = var.nullplatform_scope_workflow_role_arn
   telemetry_manager_role = var.nullplatform_telemetry_manager_role_arn
-  organization           = var.organization
-  account                = var.account
 }
 
 ################################################################################
@@ -57,7 +53,7 @@ module "eks" {
 ################################################################################
 
 module "eks_config" {
-  source = "../eks-config"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/kubernetes/helm/nullplatform/aws"
 }
 
 ################################################################################
@@ -65,7 +61,7 @@ module "eks_config" {
 ################################################################################
 
 module "aws_alb_controller" {
-  source = "../aws-alb-controller"
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/kubernetes/helm/aws-alb-controller"
   providers = {
     aws        = aws
     kubernetes = kubernetes
@@ -112,7 +108,7 @@ module "nullplatform_configuration" {
   public_load_balancer_arn           = module.alb.public_load_balancer_arn
   public_load_balancer_listener_arn  = module.alb.public_load_balancer_listener_arn
 
-  Lambda_function_role_arn = var.nullplatform_role_arn
+  lambda_function_role_arn = var.nullplatform_role_arn
 
   suffix = "poc${var.suffix}"
 

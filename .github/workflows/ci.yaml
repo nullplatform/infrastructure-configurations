@@ -1,0 +1,50 @@
+name: ci
+on:
+  push:
+    branches:
+      - 'feature/*'
+  pull_request:
+    branches:
+      - 'feature/*'
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Fetch Main Branch
+        # Fetches the main branch to ensure it's available for comparison
+        run: |
+          git fetch origin main:refs/remotes/origin/main --depth=1
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7  # Replace with your desired Terraform version
+
+      - name: Validate Terraform modules
+        run: |
+          set +e  # Disable immediate exit on error
+          FAILED=0
+          TF_DIRS=(aws gcp azure)
+          for DIR in $TF_DIRS; do
+            echo "Validating Terraform in directory: $DIR"
+            (cd $DIR; terraform fmt -check)
+            if [ $? -ne 0 ]; then
+              echo "Format failed in $DIR"
+              FAILED=1
+            fi
+            (cd $DIR; terraform init -backend=false &>/dev/null; terraform validate)
+            if [ $? -ne 0 ]; then
+              echo "Validation failed in $DIR"
+              FAILED=1
+            fi
+          done
+
+          if [ $FAILED -ne 0 ]; then
+            exit 1  # Exit with error if any validation failed
+          fi
