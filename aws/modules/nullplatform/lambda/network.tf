@@ -1,25 +1,17 @@
-resource "nullplatform_provider_config" "network" {
-  provider = nullplatform
-  nrn      = var.nrn
-  type     = "aws-networking-configuration"
-  dimensions = {
-    "env" : var.suffix
-  }
-  attributes = jsonencode({
-    "vpc" : {
-      "id" : var.vpc_id,
-      "subnets" : var.subnet_ids,
-      "security_groups" : var.security_group_ids
-    },
-    "load_balancer" : {
-      "private" : {
-        "arn" : var.private_load_balancer_arn,
-        "listener_arn" : var.private_load_balancer_listener_arn
-      },
-      "public" : {
-        "arn" : var.public_load_balancer_arn,
-        "listener_arn" : var.public_load_balancer_listener_arn
-      }
-    }
-  })
+module "network" {
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/networking/vpc"
+
+  nrn         = var.nrn
+  environment = var.suffix
+
+  vpc_id             = var.vpc_id
+  subnet_ids         = var.subnet_ids
+  security_group_ids = var.security_group_ids
+
+
+  private_load_balancer_arn          = var.private_load_balancer_arn
+  private_load_balancer_listener_arn = var.private_load_balancer_listener_arn
+
+  public_load_balancer_arn          = var.public_load_balancer_arn
+  public_load_balancer_listener_arn = var.public_load_balancer_listener_arn
 }

@@ -1,5 +1,15 @@
 # General variables
 
+variable "github_organization" {
+  type        = string
+  description = "github organization where our code repositories will be created"
+}
+
+variable "github_organization_installation_id" {
+  type        = string
+  description = "github installation id of Nullplatform github app"
+}
+
 variable "domain_name" {
   type        = string
   description = "The domain name to use for nullplatform applications"

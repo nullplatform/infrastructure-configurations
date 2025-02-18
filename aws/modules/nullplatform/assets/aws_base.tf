@@ -2,6 +2,7 @@ data "aws_caller_identity" "current" {
   provider = aws
 }
 
+# Cannot call the module as this one does not have dimensions
 resource "nullplatform_provider_config" "aws" {
   provider   = nullplatform
   nrn        = var.nrn

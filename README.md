@@ -18,6 +18,7 @@ This placeholder contains working examples of configurations that will allow to 
 .
 ├── aws
 └── azure
+└── gcp
 ```
 
 ## Global prerequitites

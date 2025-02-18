@@ -1,13 +1,8 @@
-resource "nullplatform_provider_config" "lambda" {
-  provider = nullplatform
-  nrn      = var.nrn
-  type     = "aws-lambda-configuration"
-  dimensions = {
-    "env" : var.suffix
-  }
-  attributes = jsonencode({
-    setup = {
-      role_arn = var.Lambda_function_role_arn
-    }
-  })
+module "lambda" {
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/compute/lambda"
+
+  nrn         = var.nrn
+  environment = var.suffix
+
+  lambda_function_role_arn = var.lambda_function_role_arn
 }

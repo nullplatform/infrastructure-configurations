@@ -1,45 +1,24 @@
-data "aws_caller_identity" "current" {
-  provider = aws
+module "aws" {
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/cloud/aws"
+
+  nrn         = var.nrn
+  environment = var.suffix
+
+  region                = var.region
+  scope_manager_role    = var.scope_manager_role
+  domain_name           = var.domain_name
+  hosted_zone_id        = var.hosted_zone_id
+  hosted_public_zone_id = var.hosted_public_zone_id
 }
 
-resource "nullplatform_provider_config" "aws" {
-  provider = nullplatform
-  nrn      = var.nrn
-  type     = "aws-configuration"
-  dimensions = {
-    "env" : var.suffix
-  }
-  attributes = jsonencode({
-    iam = {
-      scope_workflow_role = var.scope_manager_role
-    }
-    account = {
-      id     = data.aws_caller_identity.current.account_id
-      region = var.region
-    }
-    networking = {
-      application_domain    = true
-      domain_name           = var.domain_name
-      hosted_zone_id        = var.hosted_zone_id
-      hosted_public_zone_id = var.hosted_public_zone_id
-    }
-  })
-}
+module "eks" {
+  source = "git@github.com:nullplatform/main-terraform-modules.git//modules/nullplatform/provider/container/eks"
 
-resource "nullplatform_provider_config" "eks" {
-  provider = nullplatform
-  nrn      = var.nrn
-  type     = "eks-configuration"
-  dimensions = {
-    "env" : var.suffix
-  }
-  attributes = jsonencode({
-    cluster = {
-      id        = var.cluster_name,
-      namespace = "nullplatform"
-    }
-  })
+  nrn          = var.nrn
+  environment  = var.suffix
+  cluster_name = var.cluster_name
+
   depends_on = [
-    nullplatform_provider_config.aws
+    module.aws
   ]
 }

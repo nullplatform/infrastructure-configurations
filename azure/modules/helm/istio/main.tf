@@ -26,7 +26,7 @@ resource "helm_release" "istio_ingressgateway" {
   chart      = "gateway"
   namespace  = local.namespace
 
- set {
+  set {
     name  = "platform"
     value = "demo"
   }
